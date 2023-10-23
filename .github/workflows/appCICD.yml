@@ -21,7 +21,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore'
+          fileName: 'keystore.jks'
           fileDir: /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Setup Flutter
@@ -41,5 +41,5 @@ jobs:
       - name: Upload artifact to Github
         uses: actions/upload-artifact@v1
         with:
-          name: release-apk
+          name: release-aab
           path: build/app/outputs/apk/release/app-release.aab

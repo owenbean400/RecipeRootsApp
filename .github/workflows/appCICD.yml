@@ -21,7 +21,7 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: '/home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore/keystore.jks'
+          fileName: 'keystore/keystore.jks'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Setup Flutter
         uses: subosito/flutter-action@v1

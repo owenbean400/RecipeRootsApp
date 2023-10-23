@@ -1,0 +1,54 @@
+# Web nor computer platform is not being created
+windows/
+web/
+macos/
+linux/
+
+# Don't have compiled builds in repo
+build/
+
+pubspec.lock
+
+# Android items not needs
+android/key.properties
+android/keystore
+android/local.properties
+android/gradle-wrapper.jar
+android/.gradle
+android/gradlew
+android/gradlew.bat
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+
+# Ignore iOS
+ios/*.mode1v3
+ios/*.mode2v3
+ios/*.moved-aside
+ios/*.pbxuser
+ios/*.perspectivev3
+ios/**/*sync/
+ios/.sconsign.dblite
+ios/.tags*
+ios/**/.vagrant/
+ios/**/DerivedData/
+ios/Icon?
+ios/**/Pods/
+ios/**/.symlinks/
+ios/profile
+ios/xcuserdata
+ios/**/.generated/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/app.flx
+ios/Flutter/app.zip
+ios/Flutter/flutter_assets/
+ios/Flutter/flutter_export_environment.sh
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+
+# Exceptions to above rules.
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+!default.perspectivev3

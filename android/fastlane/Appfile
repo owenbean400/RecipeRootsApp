@@ -1,0 +1,2 @@
+json_key_file("/Users/owenbean/School/COS457/reciperoots/RecipeRootsApp/android/reciperoots-api.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.owenbean.reciperoots") # e.g. com.krausefx.app

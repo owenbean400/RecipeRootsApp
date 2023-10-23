@@ -44,8 +44,6 @@ android {
 
     defaultConfig {
         applicationId "com.owenbean.reciperoots"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -59,10 +57,10 @@ android {
 
             if (allFilesFromDir != null) {
                 def keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo("keystore/keystore.jks")
+                keystoreFile.renameTo("keystore/keystore")
             }
 
-            storeFile = file("keystore/keystore.jks")
+            storeFile = file("keystore/keystore")
             storePassword System.getenv("SIGNING_STORE_PASSWORD")
             keyAlias System.getenv("SIGNING_KEY_ALIAS")
             keyPassword System.getenv("SIGNING_KEY_PASSWORD")

@@ -13,19 +13,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Setup java code
         uses: actions/setup-java@v1
         with:
           java-version: "12.x"
+
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > keystore.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore.jks
+
       - name: Setup ruby for Fastlane
         uses: ruby/setup-ruby@v1.138.0
         with:
           ruby-version: 3.2.1
           bundler-cache: true
+          working-directory: 'android'
+
       - name: Increment Android Build Number from Internal Testing
         uses: maierj/fastlane-action@v3.0.0
         with:
@@ -33,25 +38,31 @@ jobs:
           subdirectory: 'android'
         env: 
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
           channel: "stable"
+
       - name: Clean up flutter
         run: flutter clean
+
       - name: Download packages
         run: flutter pub get
+
       - name: Build Android App Bundle
         run: flutter build appbundle --release
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
       - name: Upload artifact to Github
         uses: actions/upload-artifact@v1
         with:
           name: release-aab
           path: build/app/outputs/bundle/release/app-release.aab
+
       - name: Push out app
         uses: maierj/fastlane-action@v3.0.0
         with:

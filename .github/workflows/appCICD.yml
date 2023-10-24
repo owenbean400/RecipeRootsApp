@@ -20,7 +20,7 @@ jobs:
       - name: Decode Keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > keystore.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore/keystore.jks
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore.jks
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:

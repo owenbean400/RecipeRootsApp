@@ -45,5 +45,5 @@ jobs:
         with:
           lane: 'deployInternalTesting'
           subdirectory: 'android'
-          env: 
-            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        env: 
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}

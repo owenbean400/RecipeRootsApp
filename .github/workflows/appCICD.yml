@@ -18,12 +18,9 @@ jobs:
         with:
           java-version: "12.x"
       - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'keystore.jks'
-          fileDir: /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore
-          encodedString: ${{ secrets.KEYSTORE }}
+        run: |
+          echo "${{ secrets.KEYSTORE }}" > keystore.asc
+          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore/keystore.jks
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:

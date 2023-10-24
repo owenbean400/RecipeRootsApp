@@ -45,8 +45,6 @@ platform :android do
     f = File.new(path, 'w')
     f.write(s)
     f.close
-
-    puts version
   end
 
   desc "Deploy a new version to the Google Play"

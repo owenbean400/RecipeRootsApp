@@ -22,9 +22,9 @@ jobs:
           echo "${{ secrets.KEYSTORE }}" > keystore.asc
           gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch keystore.asc > /home/runner/work/RecipeRootsApp/RecipeRootsApp/android/app/keystore.jks
       - name: Setup ruby for Fastlane
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@v1.138.0
         with:
-          ruby-version: '3.0'
+          ruby-version: 3.2.1
           bundler-cache: true
       - name: Increment Android Build Number from Internal Testing
         uses: maierj/fastlane-action@v3.0.0

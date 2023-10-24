@@ -53,7 +53,8 @@ platform :android do
       aab: "../build/app/outputs/bundle/release/app-release.aab",
       package_name: "com.owenbean.reciperoots",
       json_key_data: ENV["GOOGLE_API_KEY"],
-      track: "internal"
+      track: "internal",
+      release_status: 'draft'
     )
   end
 end

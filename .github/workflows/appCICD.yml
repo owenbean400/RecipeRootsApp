@@ -43,6 +43,7 @@ jobs:
       - name: Push out app
         uses: maierj/fastlane-action@v3.0.0
         with:
-          lane: 'deploy'
+          lane: 'deployInternalTesting'
           subdirectory: 'android'
-          env: ${{ secrets.GOOGLE_API_KEY }}
+          env: 
+            GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}

@@ -31,11 +31,12 @@ platform :android do
   end
 
   desc "Deploy a new version to the Google Play"
-  lane :deploy do
+  lane :deployInternalTesting do
     upload_to_play_store(
-      aab: "../build/app/outputs/bundle/release/app-release.aab"
-      package_name: "com.owenbean.reciperoots"
-      json_key_data: ENV["GOOGLE_API_KEY"]
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      package_name: "com.owenbean.reciperoots",
+      json_key_data: ENV["GOOGLE_API_KEY"],
+      track: "internal"
     )
   end
 end

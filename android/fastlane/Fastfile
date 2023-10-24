@@ -31,6 +31,25 @@ platform :android do
   end
 
   desc "Deploy a new version to the Google Play"
+  lane :setBuildBasedOnInternalTesting do
+    version = google_play_track_version_codes(
+      json_key_data: ENV["GOOGLE_API_KEY"],
+      track: "internal",
+      package_name: "com.owenbean.reciperoots"
+    )
+
+    path = '../app/build.gradle'
+    re = /versionCode\s+(\d+)/
+    s = File.read(path)
+    s[re, 1] = (version[0] + 1).to_s
+    f = File.new(path, 'w')
+    f.write(s)
+    f.close
+
+    puts version
+  end
+
+  desc "Deploy a new version to the Google Play"
   lane :deployInternalTesting do
     upload_to_play_store(
       aab: "../build/app/outputs/bundle/release/app-release.aab",

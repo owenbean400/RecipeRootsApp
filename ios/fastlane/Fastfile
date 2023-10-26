@@ -28,6 +28,13 @@ def ensure_temp_keychain(name, password)
 end
 
 platform :ios do
+  lane :bumpFlutterVersion do
+      flutter_versioncode_bump({
+      pubspec_location: "../pubspec.yaml",
+      version_code_increment: 1
+    })
+  end
+
   lane :closed_beta do
     keychain_name = TEMP_KEYCHAIN_USER
     keychain_password = TEMP_KEYCHAIN_PASSWORD

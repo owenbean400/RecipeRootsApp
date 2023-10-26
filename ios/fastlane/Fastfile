@@ -38,7 +38,7 @@ platform :ios do
 
     buildNumber = latest_testflight_build_number(
       api_key: api_key,
-      app_identifier: APPLICATON_ID,
+      app_identifier: APPLICATON_ID
     )
 
     flutter_versioncode_bump({

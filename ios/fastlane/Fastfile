@@ -30,9 +30,20 @@ end
 
 platform :ios do
   lane :bumpFlutterVersion do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPLE_API_KEY_ID"],
+      key_content: ENV["APPLE_API_KEY"],
+      issuer_id: ENV["APPLE_API_ISSUER_ID"]
+    )
+
+    buildNumber = latest_testflight_build_number(
+      api_key: api_key,
+      app_identifier: "com.owenbean.reciperoots"
+    )
+
     flutter_versioncode_bump({
       pubspec_location: "../pubspec.yaml",
-      version_code_increment: (latest_testflight_build_number(api_key: app_store_connect_api_key(key_id: ENV["APPLE_API_KEY_ID"], key_content: ENV["APPLE_API_KEY"], issuer_id: ENV["APPLE_API_ISSUER_ID"]), app_identifier: "#{APPLICATON_ID}")) + 1
+      version_code_increment: buildNumber + 1
     })
   end
 

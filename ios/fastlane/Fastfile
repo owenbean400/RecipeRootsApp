@@ -31,7 +31,11 @@ end
 platform :ios do
   lane :bumpFlutterVersion do
     buildNumber = latest_testflight_build_number(
-      api_key: ENV["APPLE_API_KEY"],
+      api_key: {
+        key: ENV["APPLE_API_KEY"],
+        key_id: ENV["APPLE_API_KEY_ID"],
+        issuer_id: ENV["APPLE_API_ISSUER_ID"]
+      },
       app_identifier: APPLICATON_ID,
     )
 

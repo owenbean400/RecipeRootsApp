@@ -42,20 +42,19 @@ platform :ios do
       keychain_password: keychain_password 
     )
 
-    gym(
+    build_app(
       configuration: "Release",
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
       export_method: "app-store",
       export_options: {
         provisioningProfiles: { 
-            APPLICATON_ID => PROVISIONING_PROFILE_SPECIFIER,
-            APPLICATON_ID => PROVISIONING_PROFILE_SPECIFIER_DEV
+            APPLICATON_ID => PROVISIONING_PROFILE_SPECIFIER
         }
       }
     )
 
-    pilot( 
+    upload_to_testflight( 
       apple_id: "#{APPLICATON_ID}",
       app_identifier: "#{BUNDLE_IDENTIFIER}",
       skip_waiting_for_build_processing: true,

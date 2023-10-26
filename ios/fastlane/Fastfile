@@ -6,6 +6,7 @@ PROVISIONING_PROFILE_SPECIFIER = ENV["PROVISIONING_PROFILE_SPECIFIER"]
 PROVISIONING_PROFILE_SPECIFIER_DEV = ENV["PROVISIONING_PROFILE_SPECIFIER_DEV"]
 TEMP_KEYCHAIN_USER = ENV["TEMP_KEYCHAIN_USER"]
 TEMP_KEYCHAIN_PASSWORD = ENV["TEMP_KEYCHAIN_PASSWORD"]
+FASTLANE_APPLE_ID = ENV["FASTLANE_APPLE_ID"]
 
 def delete_temp_keychain(name)
   delete_keychain(
@@ -30,6 +31,7 @@ end
 platform :ios do
   lane :bumpFlutterVersion do
     buildNumber = latest_testflight_build_number(
+      username: FASTLANE_APPLE_ID,
       api_key: ENV["APPLE_API_KEY"],
       app_identifier: APPLICATON_ID,
     )

@@ -29,9 +29,14 @@ end
 
 platform :ios do
   lane :bumpFlutterVersion do
-      flutter_versioncode_bump({
+    buildNumber = latest_testflight_build_number(
+      api_key: ENV["APPLE_API_KEY"],
+      app_identifier: APPLICATON_ID,
+    )
+
+    flutter_versioncode_bump({
       pubspec_location: "../pubspec.yaml",
-      version_code_increment: 1
+      version_code_increment: buildNumber + 1
     })
   end
 

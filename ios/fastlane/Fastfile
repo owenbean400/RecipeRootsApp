@@ -31,7 +31,6 @@ end
 platform :ios do
   lane :bumpFlutterVersion do
     buildNumber = latest_testflight_build_number(
-      username: FASTLANE_APPLE_ID,
       api_key: ENV["APPLE_API_KEY"],
       app_identifier: APPLICATON_ID,
     )

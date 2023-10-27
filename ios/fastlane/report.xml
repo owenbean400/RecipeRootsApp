@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000194">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: app_store_connect_api_key" time="0.005087">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: latest_testflight_build_number" time="3.327892">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: flutter_versioncode_bump" time="0.001922">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

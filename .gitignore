@@ -18,6 +18,10 @@ android/.gradle
 android/gradlew
 android/gradlew.bat
 android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+android/reciperoots-api.json
+android/keystore.jks
+android/keystore.jks.asc
+android/keystore.txt
 
 # Ignore iOS
 ios/*.mode1v3
@@ -46,6 +50,7 @@ ios/Flutter/flutter_assets/
 ios/Flutter/flutter_export_environment.sh
 ios/ServiceDefinitions.json
 ios/Runner/GeneratedPluginRegistrant.*
+ios/AuthKey_B46A7QTFNX.p8
 
 # Exceptions to above rules.
 !default.mode1v3

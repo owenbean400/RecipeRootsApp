@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_roots/view/windows/recipe/recipe_view.dart';
+import 'package:recipe_roots/view/window/recipe/recipe_view.dart';
 
-import 'view/windows/default.dart';
+import 'view/window/default.dart';
 
 void main() {
   runApp(const MainApp());

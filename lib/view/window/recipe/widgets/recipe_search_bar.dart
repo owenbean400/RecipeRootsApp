@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_roots/view/windows/recipe/widgets/advance_recipe_search_checkbox.dart';
+import 'package:recipe_roots/view/window/recipe/widgets/advance_recipe_search_checkbox.dart';
 
 class RecipeSearchBar extends StatefulWidget {
   const RecipeSearchBar({Key? key}) : super(key: key);

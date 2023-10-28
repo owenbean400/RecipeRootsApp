@@ -1,6 +1,7 @@
 import 'package:recipe_roots/domain/person.dart';
 
 class Recipe {
+  int? id;
   final String title;
   final Person person;
   final String? familyRelation;

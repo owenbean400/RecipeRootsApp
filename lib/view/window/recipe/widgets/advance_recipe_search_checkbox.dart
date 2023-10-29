@@ -6,6 +6,11 @@ class AdvanceRecipeSearchCheckbox extends StatefulWidget {
   final bool startSearchPeopleChecked;
   final bool startSearchFamilyRelationChecked;
   final bool startSearchIngredientsChecked;
+  final ValueSetter<bool> setSearchTitleChecked;
+  final ValueSetter<bool> setSearchDescriptionChecked;
+  final ValueSetter<bool> setSearchPeopleChecked;
+  final ValueSetter<bool> setSearchFamilyRelationChecked;
+  final ValueSetter<bool> setSearchIngredientsChecked;
 
   const AdvanceRecipeSearchCheckbox(
       {required this.startSearchDescriptionChecked,
@@ -13,7 +18,12 @@ class AdvanceRecipeSearchCheckbox extends StatefulWidget {
       required this.startSearchIngredientsChecked,
       required this.startSearchPeopleChecked,
       required this.startSearchTitleChecked,
-      Key? key})
+      Key? key,
+      required this.setSearchTitleChecked,
+      required this.setSearchDescriptionChecked,
+      required this.setSearchPeopleChecked,
+      required this.setSearchFamilyRelationChecked,
+      required this.setSearchIngredientsChecked})
       : super(key: key);
 
   @override
@@ -23,8 +33,6 @@ class AdvanceRecipeSearchCheckbox extends StatefulWidget {
 
 class AdvanceRecipeSearchCheckboxState
     extends State<AdvanceRecipeSearchCheckbox> {
-  decoyFunction(bool? t) {}
-
   @override
   Widget build(BuildContext context) {
     return (SizedBox(
@@ -34,23 +42,23 @@ class AdvanceRecipeSearchCheckboxState
         children: [
           CheckBoxTitle(
               text: "Search Title",
-              checkBoxChange: decoyFunction,
+              checkBoxChange: widget.setSearchTitleChecked,
               isAlreadyChecked: widget.startSearchTitleChecked),
           CheckBoxTitle(
               text: "Search Description",
-              checkBoxChange: decoyFunction,
+              checkBoxChange: widget.setSearchDescriptionChecked,
               isAlreadyChecked: widget.startSearchDescriptionChecked),
           CheckBoxTitle(
               text: "Search People",
-              checkBoxChange: decoyFunction,
+              checkBoxChange: widget.setSearchPeopleChecked,
               isAlreadyChecked: widget.startSearchPeopleChecked),
           CheckBoxTitle(
               text: "Search Family Relation",
-              checkBoxChange: decoyFunction,
+              checkBoxChange: widget.setSearchFamilyRelationChecked,
               isAlreadyChecked: widget.startSearchFamilyRelationChecked),
           CheckBoxTitle(
               text: "Search Ingredients",
-              checkBoxChange: decoyFunction,
+              checkBoxChange: widget.setSearchIngredientsChecked,
               isAlreadyChecked: widget.startSearchIngredientsChecked)
         ],
       ),

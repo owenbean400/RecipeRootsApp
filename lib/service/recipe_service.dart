@@ -5,12 +5,13 @@ import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/domain/recipe.dart';
 
 class RecipeService {
-  List<Recipe> getRecipes(
+  Future<List<Recipe>> getRecipes(
       String search,
       bool searchTitle,
       bool searchDescription,
+      bool searchPeople,
       bool searchFamilyRelation,
-      bool searchIngredients) {
+      bool searchIngredients) async {
     List<Recipe> recipes = [];
 
     // TODO: Replace get recipes with database query
@@ -28,7 +29,6 @@ class RecipeService {
     recipes.add(Recipe(
         title: "Bitter Apple Pie",
         person: person2,
-        familyRelation: "grandfather",
         desc:
             "Apple pie that was made with salt and apples. It was a joke to replace grandmother apple pie and force us to eat something awful"));
 
@@ -46,6 +46,24 @@ class RecipeService {
     recipes.add(Recipe(
         title: "Sweet Apple Pie",
         person: person4,
+        familyRelation: "grandmother",
+        desc:
+            "Sweet Apple pie made from grandmother. She would bake this every year for the beginning of fall."));
+
+    Person person5 =
+        Person(firstName: "Erin", middleName: "", lastName: "Bean");
+    recipes.add(Recipe(
+        title: "Gala Apple Pie",
+        person: person5,
+        familyRelation: "step mother",
+        desc:
+            "Apple pie made for Owen's 21 birthday. It is made just right for him."));
+
+    Person person6 =
+        Person(firstName: "Rosalie", middleName: "Grace", lastName: "Bean");
+    recipes.add(Recipe(
+        title: "Sweet Apple Pie",
+        person: person6,
         familyRelation: "grandmother",
         desc:
             "Sweet Apple pie made from grandmother. She would bake this every year for the beginning of fall."));

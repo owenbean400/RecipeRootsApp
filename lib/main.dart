@@ -77,7 +77,11 @@ class MainApp extends StatelessWidget {
                 bodyMedium: TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0), fontSize: 16),
                 bodySmall: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0), fontSize: 12))),
+                    color: Color.fromARGB(255, 0, 0, 0), fontSize: 12),
+                headlineMedium: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold))),
         home: const NavigationBar());
   }
 }

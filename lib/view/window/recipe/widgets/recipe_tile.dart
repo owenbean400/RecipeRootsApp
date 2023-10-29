@@ -42,16 +42,22 @@ class RecipeTile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(title,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium),
                               Text(personName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                   style: Theme.of(context).textTheme.bodySmall),
                               (familyRelation != null)
                                   ? Padding(
                                       padding:
                                           const EdgeInsets.fromLTRB(0, 0, 0, 8),
                                       child: Text("\"${familyRelation!}\"",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodySmall))

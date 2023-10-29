@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/advance_recipe_search_checkbox.dart';
 
 class RecipeSearchBar extends StatefulWidget {
-  const RecipeSearchBar({Key? key}) : super(key: key);
+  final Function(String, bool, bool, bool, bool, bool) searchForRecipes;
+  const RecipeSearchBar({Key? key, required this.searchForRecipes})
+      : super(key: key);
 
   @override
   RecipeSearchBarState createState() => RecipeSearchBarState();
@@ -12,10 +14,56 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
   late TextEditingController _searchController;
   bool showAdvanceMenu = false;
 
+  bool isSearchTitle = true;
+  bool isSearchDescription = false;
+  bool isSearchPeople = false;
+  bool isSearchFamilyRelation = false;
+  bool isSearchIngredients = false;
+
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+  }
+
+  void searchForRecipes() {
+    widget.searchForRecipes(
+        _searchController.text,
+        isSearchTitle,
+        isSearchDescription,
+        isSearchPeople,
+        isSearchFamilyRelation,
+        isSearchIngredients);
+  }
+
+  void setSearchTitle(bool isChecked) {
+    setState(() {
+      isSearchTitle = isChecked;
+    });
+  }
+
+  void setSearchDescription(bool isChecked) {
+    setState(() {
+      isSearchDescription = isChecked;
+    });
+  }
+
+  void setSearchPeople(bool isChecked) {
+    setState(() {
+      isSearchPeople = isChecked;
+    });
+  }
+
+  void setSearchFamilyRelation(bool isChecked) {
+    setState(() {
+      isSearchFamilyRelation = isChecked;
+    });
+  }
+
+  void setSearchIngredients(bool isChecked) {
+    setState(() {
+      isSearchIngredients = isChecked;
+    });
   }
 
   @override
@@ -29,7 +77,9 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    searchForRecipes();
+                  },
                   child: const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
                       child: SizedBox(
@@ -81,12 +131,27 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                 )
               ])),
           (showAdvanceMenu)
-              ? const AdvanceRecipeSearchCheckbox(
-                  startSearchDescriptionChecked: false,
-                  startSearchTitleChecked: false,
-                  startSearchFamilyRelationChecked: false,
-                  startSearchIngredientsChecked: false,
-                  startSearchPeopleChecked: false)
+              ? AdvanceRecipeSearchCheckbox(
+                  startSearchDescriptionChecked: isSearchDescription,
+                  startSearchTitleChecked: isSearchTitle,
+                  startSearchFamilyRelationChecked: isSearchFamilyRelation,
+                  startSearchIngredientsChecked: isSearchIngredients,
+                  startSearchPeopleChecked: isSearchPeople,
+                  setSearchTitleChecked: (value) {
+                    setSearchTitle(value);
+                  },
+                  setSearchDescriptionChecked: (value) {
+                    setSearchDescription(value);
+                  },
+                  setSearchPeopleChecked: (value) {
+                    setSearchPeople(value);
+                  },
+                  setSearchFamilyRelationChecked: (value) {
+                    setSearchFamilyRelation(value);
+                  },
+                  setSearchIngredientsChecked: (value) {
+                    setSearchIngredients(value);
+                  })
               : Container(),
         ])));
   }

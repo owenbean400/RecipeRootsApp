@@ -25,7 +25,7 @@ class RecipeTile extends StatelessWidget {
         },
         child: Container(
             decoration: const BoxDecoration(
-                border: Border(top: (BorderSide(color: Colors.grey)))),
+                border: Border(bottom: (BorderSide(color: Colors.grey)))),
             padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
             child: SizedBox(
               height: 128,

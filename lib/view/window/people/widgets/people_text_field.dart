@@ -4,9 +4,13 @@ class PeopleTextField extends StatelessWidget {
   final TextEditingController textFieldController;
   final String labelText;
   final double borderRadius = 8;
+  final bool? isDisabled;
 
   const PeopleTextField(
-      {super.key, required this.textFieldController, required this.labelText});
+      {super.key,
+      required this.textFieldController,
+      required this.labelText,
+      this.isDisabled});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +21,7 @@ class PeopleTextField extends StatelessWidget {
           children: [
             Text("$labelText:"),
             TextField(
+                readOnly: isDisabled ?? false,
                 controller: textFieldController,
                 cursorColor: Theme.of(context).primaryColor,
                 decoration: InputDecoration(

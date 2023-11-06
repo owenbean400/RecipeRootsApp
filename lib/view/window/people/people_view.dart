@@ -49,14 +49,18 @@ class PeopleViewState extends State<PeopleView> {
                     return const Text("Waiting for family relation to load");
                   }
                 })),
-        Padding(
-            padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width - 72,
-                MediaQuery.of(context).size.height - 200, 0, 0),
-            child: TextButton(
-                onPressed: () {
-                  goToAddFamiltRelation();
-                },
-                child: const Text("+"))),
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Padding(
+              padding: EdgeInsets.fromLTRB(
+                  constraints.maxWidth - 84, constraints.maxHeight - 64, 0, 0),
+              child: TextButton(
+                  onPressed: () {
+                    goToAddFamiltRelation();
+                  },
+                  child: Text("+",
+                      style: Theme.of(context).textTheme.bodyMedium)));
+        }),
       ],
     );
   }

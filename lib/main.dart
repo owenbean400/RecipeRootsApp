@@ -24,6 +24,9 @@ class NavigationBarState extends State<NavigationBar> {
       const RecipeView(),
       PeopleView(
         setPeopleNavAddFunction: _addPersonView,
+        setEditPerson: (value) {
+          _editPersonView(value);
+        },
       )
     ];
   }
@@ -49,10 +52,20 @@ class NavigationBarState extends State<NavigationBar> {
     });
   }
 
+  void _editPersonView(int id) {
+    _widgetOptions[2] =
+        PeopleAdd(id: id, setPeopleNavViewFunction: _viewPersonView);
+    setState(() {
+      _selectedIndex = 2;
+    });
+  }
+
   void _viewPersonView() {
     _widgetOptions[2] = PeopleView(
-      setPeopleNavAddFunction: _addPersonView,
-    );
+        setPeopleNavAddFunction: _addPersonView,
+        setEditPerson: (value) {
+          _editPersonView(value);
+        });
     setState(() {
       _selectedIndex = 2;
     });

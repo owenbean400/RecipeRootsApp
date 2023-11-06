@@ -6,8 +6,12 @@ import 'package:recipe_roots/view/window/people/widgets/family_relation_list.dar
 
 class PeopleView extends StatefulWidget {
   final Function setPeopleNavAddFunction;
+  final ValueSetter<int> setEditPerson;
 
-  const PeopleView({super.key, required this.setPeopleNavAddFunction});
+  const PeopleView(
+      {super.key,
+      required this.setPeopleNavAddFunction,
+      required this.setEditPerson});
 
   @override
   PeopleViewState createState() => PeopleViewState();
@@ -36,8 +40,10 @@ class PeopleViewState extends State<PeopleView> {
 
                     for (FamilyRelation familyRelation in snapshot.data!) {
                       familyRelationsList.add(FamilyRelationTile(
+                          id: familyRelation.id,
                           name: familyRelation.person.firstName,
-                          relationship: familyRelation.familyRelation));
+                          relationship: familyRelation.familyRelation,
+                          setEditView: widget.setEditPerson));
                     }
 
                     return Column(

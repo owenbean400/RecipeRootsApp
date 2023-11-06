@@ -9,8 +9,24 @@ class PersonService {
     return Person(firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
   }
 
+  FamilyRelation getFamilyRelationByID(int id) {
+    // TODO: Replace with database query
+    Person person1 = Person(
+        id: id, firstName: "Olivea", middleName: "Grace", lastName: "Bean");
+
+    return FamilyRelation(person: person1, familyRelation: "Sister");
+  }
+
+  void updateFamilyRelation(FamilyRelation familyRelation) {
+    // TODO: Replace with add service function
+    log(familyRelation.person.firstName);
+    log(familyRelation.person.middleName);
+    log(familyRelation.person.lastName);
+    log(familyRelation.familyRelation);
+  }
+
   /// Gets the family relation of the to person
-  FamilyRelation getFamilyRelation(Person person) {
+  FamilyRelation getFamilyRelationByPerson(Person person) {
     // TODO: Replace with database query
     return FamilyRelation(person: person, familyRelation: "Family Relation");
   }
@@ -21,6 +37,10 @@ class PersonService {
     log(familyRelation.person.middleName);
     log(familyRelation.person.lastName);
     log(familyRelation.familyRelation);
+  }
+
+  void deleteFamilyRelationAndPersonFromID(int id) {
+    log("Deleted!");
   }
 
   /// Gets all of the family relation of the from person
@@ -64,29 +84,37 @@ class PersonService {
         Person(firstName: "David", middleName: "Lee", lastName: "Bean");
 
     familyRelations
-        .add(FamilyRelation(person: person1, familyRelation: "Sister"));
-    familyRelations.add(FamilyRelation(person: person2, familyRelation: "Mom"));
-    familyRelations.add(FamilyRelation(person: person3, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person4, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person5, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person6, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person7, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person8, familyRelation: "Dad"));
-    familyRelations.add(FamilyRelation(person: person9, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 1, person: person1, familyRelation: "Sister"));
     familyRelations
-        .add(FamilyRelation(person: person10, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 2, person: person2, familyRelation: "Mom"));
     familyRelations
-        .add(FamilyRelation(person: person11, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 3, person: person3, familyRelation: "Dad"));
     familyRelations
-        .add(FamilyRelation(person: person12, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 4, person: person4, familyRelation: "Dad"));
     familyRelations
-        .add(FamilyRelation(person: person13, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 5, person: person5, familyRelation: "Dad"));
     familyRelations
-        .add(FamilyRelation(person: person14, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 6, person: person6, familyRelation: "Dad"));
     familyRelations
-        .add(FamilyRelation(person: person15, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 7, person: person7, familyRelation: "Dad"));
     familyRelations
-        .add(FamilyRelation(person: person16, familyRelation: "Dad"));
+        .add(FamilyRelation(id: 8, person: person8, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 9, person: person9, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 10, person: person10, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 11, person: person11, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 12, person: person12, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 13, person: person13, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 14, person: person14, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 15, person: person15, familyRelation: "Dad"));
+    familyRelations
+        .add(FamilyRelation(id: 16, person: person16, familyRelation: "Dad"));
 
     return familyRelations;
   }

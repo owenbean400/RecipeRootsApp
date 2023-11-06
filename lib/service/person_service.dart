@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
 
@@ -11,6 +13,14 @@ class PersonService {
   FamilyRelation getFamilyRelation(Person person) {
     // TODO: Replace with database query
     return FamilyRelation(person: person, familyRelation: "Family Relation");
+  }
+
+  void addFamilyRelation(FamilyRelation familyRelation) {
+    // TODO: Replace with add service function
+    log(familyRelation.person.firstName);
+    log(familyRelation.person.middleName);
+    log(familyRelation.person.lastName);
+    log(familyRelation.familyRelation);
   }
 
   /// Gets all of the family relation of the from person

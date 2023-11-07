@@ -66,15 +66,14 @@ class RecipeViewsState extends State<RecipeViews> {
                     },
                   ));
                 }
-                return Padding(
-                    padding: (Platform.isIOS)
-                        ? const EdgeInsets.fromLTRB(0, 120, 0, 0)
-                        : const EdgeInsets.fromLTRB(0, 84, 0, 0),
-                    child: Expanded(
-                        child: SingleChildScrollView(
-                            child: Column(
-                      children: recipeTitles,
-                    ))));
+                return SingleChildScrollView(
+                    child: Padding(
+                        padding: (Platform.isIOS)
+                            ? const EdgeInsets.fromLTRB(0, 120, 0, 0)
+                            : const EdgeInsets.fromLTRB(0, 84, 0, 0),
+                        child: Column(
+                          children: recipeTitles,
+                        )));
               } else if (snapshot.hasError) {
                 return const Text("Error with data");
               } else {

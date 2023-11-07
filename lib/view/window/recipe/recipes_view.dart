@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/domain/recipe.dart';
@@ -44,15 +46,8 @@ class RecipeViewsState extends State<RecipeViews> {
 
   @override
   Widget build(BuildContext context) {
-    return (Column(
+    return (Stack(
       children: [
-        RecipeSearchBar(
-          searchForRecipes: (searchStr, isSearchTitle, isSearchDescription,
-              isSearchPeople, isSearchFamilyRelation, isSearchIngredients) {
-            searchRecipe(searchStr, isSearchTitle, isSearchDescription,
-                isSearchPeople, isSearchFamilyRelation, isSearchIngredients);
-          },
-        ),
         FutureBuilder<List<Recipe>>(
             future: recipes,
             builder: (context, snapshot) {
@@ -71,17 +66,28 @@ class RecipeViewsState extends State<RecipeViews> {
                     },
                   ));
                 }
-                return Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
-                  children: recipeTitles,
-                )));
+                return Padding(
+                    padding: (Platform.isIOS)
+                        ? const EdgeInsets.fromLTRB(0, 120, 0, 0)
+                        : const EdgeInsets.fromLTRB(0, 84, 0, 0),
+                    child: Expanded(
+                        child: SingleChildScrollView(
+                            child: Column(
+                      children: recipeTitles,
+                    ))));
               } else if (snapshot.hasError) {
                 return const Text("Error with data");
               } else {
                 return const Text("Waiting for search");
               }
-            })
+            }),
+        RecipeSearchBar(
+          searchForRecipes: (searchStr, isSearchTitle, isSearchDescription,
+              isSearchPeople, isSearchFamilyRelation, isSearchIngredients) {
+            searchRecipe(searchStr, isSearchTitle, isSearchDescription,
+                isSearchPeople, isSearchFamilyRelation, isSearchIngredients);
+          },
+        ),
       ],
     ));
   }

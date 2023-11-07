@@ -43,6 +43,19 @@ class PersonService {
     log("Deleted!");
   }
 
+  Future<List<Person>> getAllPeople() async {
+    List<Person> people = [];
+
+    people.add(Person(
+        id: 1, firstName: "Olivea", middleName: "Grace", lastName: "Bean"));
+    people.add(Person(
+        id: 2, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean"));
+    people.add(
+        Person(id: 3, firstName: "David", middleName: "Lee", lastName: "Bean"));
+
+    return people;
+  }
+
   /// Gets all of the family relation of the from person
   Future<List<FamilyRelation>> getAllFamilyRelation(Person person) async {
     List<FamilyRelation> familyRelations = [];

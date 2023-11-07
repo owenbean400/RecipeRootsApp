@@ -3,6 +3,7 @@ import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/view/window/default.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
+import 'package:recipe_roots/view/window/recipe/recipe_add.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipes_view.dart';
 
@@ -24,6 +25,7 @@ class NavigationBarState extends State<NavigationBar> {
     _widgetOptions = <Widget>[
       const DefaultView(),
       RecipeViews(
+        goToRecipeAdd: _addRecipeView,
         recipeViewAction: (value) {
           _viewRecipeViews(value);
         },
@@ -89,10 +91,18 @@ class NavigationBarState extends State<NavigationBar> {
 
   void _viewRecipesViews() {
     _widgetOptions[1] = RecipeViews(
+      goToRecipeAdd: _addRecipeView,
       recipeViewAction: (value) {
         _viewRecipeViews(value);
       },
     );
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
+  void _addRecipeView() {
+    _widgetOptions[1] = RecipeAdd(goToRecipeViews: _viewRecipesViews);
     setState(() {
       _selectedIndex = 1;
     });

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/view/window/default.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_view.dart';
+import 'package:recipe_roots/view/window/recipe/recipes_view.dart';
 
 void main() {
   runApp(const MainApp());
@@ -21,7 +23,11 @@ class NavigationBarState extends State<NavigationBar> {
   NavigationBarState() {
     _widgetOptions = <Widget>[
       const DefaultView(),
-      const RecipeView(),
+      RecipeViews(
+        recipeViewAction: (value) {
+          _viewRecipeViews(value);
+        },
+      ),
       PeopleView(
         setPeopleNavAddFunction: _addPersonView,
         setEditPerson: (value) {
@@ -33,7 +39,7 @@ class NavigationBarState extends State<NavigationBar> {
 
   List<Widget> _widgetOptions = <Widget>[
     const DefaultView(),
-    const RecipeView(),
+    const DefaultView(),
     const DefaultView()
   ];
 
@@ -68,6 +74,27 @@ class NavigationBarState extends State<NavigationBar> {
         });
     setState(() {
       _selectedIndex = 2;
+    });
+  }
+
+  void _viewRecipeViews(EntireRecipe recipe) {
+    _widgetOptions[1] = RecipeView(
+      recipe: recipe,
+      goToRecipeView: _viewRecipesViews,
+    );
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
+  void _viewRecipesViews() {
+    _widgetOptions[1] = RecipeViews(
+      recipeViewAction: (value) {
+        _viewRecipeViews(value);
+      },
+    );
+    setState(() {
+      _selectedIndex = 1;
     });
   }
 

@@ -13,5 +13,6 @@ class Recipe {
       required this.person,
       required this.desc,
       this.familyRelation,
-      this.imagePlace});
+      this.imagePlace,
+      this.id});
 }

@@ -1,81 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_roots/domain/recipe.dart';
-import 'package:recipe_roots/service/recipe_service.dart';
-import 'package:recipe_roots/view/window/recipe/widgets/recipe_search_bar.dart';
-import 'package:recipe_roots/view/window/recipe/widgets/recipe_tile.dart';
+import 'package:recipe_roots/domain/entire_recipe.dart';
+import 'package:recipe_roots/view/window/recipe/widgets/cooking_steps_view.dart';
+import 'package:recipe_roots/view/window/recipe/widgets/ingredients_view.dart';
 
-class RecipeView extends StatefulWidget {
-  const RecipeView({super.key});
+class RecipeView extends StatelessWidget {
+  final EntireRecipe recipe;
+  final Function goToRecipeView;
 
-  @override
-  RecipeViewState createState() => RecipeViewState();
-}
-
-class RecipeViewState extends State<RecipeView> {
-  Future<List<Recipe>> recipes =
-      RecipeService().getRecipes("", true, false, false, false, false);
-
-  goToRecipePage(int? recipeId) {}
-
-  searchRecipe(
-      String searchStr,
-      bool isSearchTitle,
-      bool isSearchDescription,
-      bool isSearchPeople,
-      bool isSearchFamilyRelation,
-      bool isSearchIngredients) {
-    setState(() {
-      recipes = RecipeService().getRecipes(
-          searchStr,
-          isSearchTitle,
-          isSearchDescription,
-          isSearchPeople,
-          isSearchFamilyRelation,
-          isSearchIngredients);
-    });
-  }
+  const RecipeView(
+      {super.key, required this.recipe, required this.goToRecipeView});
 
   @override
   Widget build(BuildContext context) {
-    return (Column(
-      children: [
-        RecipeSearchBar(
-          searchForRecipes: (searchStr, isSearchTitle, isSearchDescription,
-              isSearchPeople, isSearchFamilyRelation, isSearchIngredients) {
-            searchRecipe(searchStr, isSearchTitle, isSearchDescription,
-                isSearchPeople, isSearchFamilyRelation, isSearchIngredients);
-          },
-        ),
-        FutureBuilder<List<Recipe>>(
-            future: recipes,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                List<RecipeTile> recipeTitles = [];
-
-                for (var element in snapshot.data!) {
-                  recipeTitles.add(RecipeTile(
-                    title: element.title,
-                    personName:
-                        "${element.person.firstName} ${element.person.lastName}",
-                    description: element.desc,
-                    familyRelation: element.familyRelation,
-                    onTapRecipe: (value) {
-                      goToRecipePage(value);
+    return Stack(alignment: Alignment.topLeft, children: [
+      Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 64),
+          child: SingleChildScrollView(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  child: Text(recipe.recipe.title,
+                      style: Theme.of(context).textTheme.bodyLarge)),
+              Text(recipe.recipe.desc,
+                  style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                  "${recipe.recipe.person.firstName} ${recipe.recipe.person.middleName} ${recipe.recipe.person.lastName}",
+                  style: Theme.of(context).textTheme.bodyMedium),
+              Text(recipe.recipe.familyRelation ?? "",
+                  style: Theme.of(context).textTheme.bodyMedium),
+              IngredientsView(ingredients: recipe.ingredients),
+              CookingStepsView(cookingSteps: recipe.cookingSteps)
+            ],
+          ))),
+      LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+            width: constraints.maxWidth,
+            padding: EdgeInsets.fromLTRB(16, constraints.maxHeight - 64, 16, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      goToRecipeView();
                     },
-                  ));
-                }
-                return Expanded(
-                    child: SingleChildScrollView(
-                        child: Column(
-                  children: recipeTitles,
-                )));
-              } else if (snapshot.hasError) {
-                return const Text("Error with data");
-              } else {
-                return const Text("Waiting for search");
-              }
-            })
-      ],
-    ));
+                    child: Text("Back",
+                        style: Theme.of(context).textTheme.bodyMedium)),
+                TextButton(
+                    onPressed: () {
+                      goToRecipeView();
+                    },
+                    child: Text("Delete",
+                        style: Theme.of(context).textTheme.bodyMedium)),
+                TextButton(
+                    onPressed: () {
+                      goToRecipeView();
+                    },
+                    child: Text("Edit",
+                        style: Theme.of(context).textTheme.bodyMedium))
+              ],
+            ));
+      })
+    ]);
   }
 }

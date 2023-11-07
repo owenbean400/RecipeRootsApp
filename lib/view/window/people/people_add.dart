@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
@@ -139,7 +141,9 @@ class PeopleAddState extends State<PeopleAdd> {
     }
 
     return Container(
-        padding: const EdgeInsets.all(16),
+        padding: (Platform.isIOS)
+            ? const EdgeInsets.fromLTRB(16, 40, 16, 16)
+            : const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

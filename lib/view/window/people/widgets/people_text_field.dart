@@ -5,12 +5,14 @@ class PeopleTextField extends StatelessWidget {
   final String labelText;
   final double borderRadius = 8;
   final bool? isDisabled;
+  final bool? isMultipleLine;
 
   const PeopleTextField(
       {super.key,
       required this.textFieldController,
       required this.labelText,
-      this.isDisabled});
+      this.isDisabled,
+      this.isMultipleLine});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,10 @@ class PeopleTextField extends StatelessWidget {
                 readOnly: isDisabled ?? false,
                 controller: textFieldController,
                 cursorColor: Theme.of(context).primaryColor,
+                maxLines: (isMultipleLine ?? false) ? null : 1,
+                keyboardType: (isMultipleLine ?? false)
+                    ? TextInputType.multiline
+                    : TextInputType.text,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   fillColor: Theme.of(context).hintColor,

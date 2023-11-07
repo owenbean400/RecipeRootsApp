@@ -8,8 +8,10 @@ import 'package:recipe_roots/view/window/recipe/widgets/recipe_search_bar.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/recipe_tile.dart';
 
 class RecipeViews extends StatefulWidget {
+  final Function goToRecipeAdd;
   final ValueSetter<EntireRecipe> recipeViewAction;
-  const RecipeViews({super.key, required this.recipeViewAction});
+  const RecipeViews(
+      {super.key, required this.recipeViewAction, required this.goToRecipeAdd});
 
   @override
   RecipeViewsState createState() => RecipeViewsState();
@@ -80,6 +82,18 @@ class RecipeViewsState extends State<RecipeViews> {
                 return const Text("Waiting for search");
               }
             }),
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Padding(
+              padding: EdgeInsets.fromLTRB(
+                  constraints.maxWidth - 84, constraints.maxHeight - 64, 0, 0),
+              child: TextButton(
+                  onPressed: () {
+                    widget.goToRecipeAdd();
+                  },
+                  child: Text("+",
+                      style: Theme.of(context).textTheme.bodyMedium)));
+        }),
         RecipeSearchBar(
           searchForRecipes: (searchStr, isSearchTitle, isSearchDescription,
               isSearchPeople, isSearchFamilyRelation, isSearchIngredients) {

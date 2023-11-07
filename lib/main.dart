@@ -101,9 +101,6 @@ class NavigationBarState extends State<NavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Recipe Roots'),
-          backgroundColor: Theme.of(context).primaryColor),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[

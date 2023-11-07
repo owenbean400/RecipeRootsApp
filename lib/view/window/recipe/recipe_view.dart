@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/cooking_steps_view.dart';
@@ -14,7 +16,9 @@ class RecipeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(alignment: Alignment.topLeft, children: [
       Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 64),
+          padding: (Platform.isIOS)
+              ? const EdgeInsets.fromLTRB(16, 40, 16, 64)
+              : const EdgeInsets.fromLTRB(16, 0, 16, 64),
           child: SingleChildScrollView(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

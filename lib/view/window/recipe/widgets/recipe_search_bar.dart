@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/advance_recipe_search_checkbox.dart';
 
@@ -70,10 +72,14 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
   Widget build(BuildContext context) {
     return (Container(
         color: Theme.of(context).primaryColor,
-        height: (showAdvanceMenu) ? 440 : 84,
+        height: (Platform.isIOS)
+            ? ((showAdvanceMenu) ? 460 : 120)
+            : ((showAdvanceMenu) ? 440 : 84),
         child: Column(children: [
           Padding(
-              padding: const EdgeInsets.all(8),
+              padding: (Platform.isIOS)
+                  ? const EdgeInsets.fromLTRB(8, 44, 8, 8)
+                  : const EdgeInsets.all(8),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 InkWell(

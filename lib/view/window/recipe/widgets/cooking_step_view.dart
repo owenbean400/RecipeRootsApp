@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CookingStepView extends StatefulWidget {
-  final int order;
   final String instruction;
+  final int order;
 
   const CookingStepView(
       {Key? key, required this.instruction, required this.order})
@@ -15,17 +15,23 @@ class CookingStepView extends StatefulWidget {
 class CookingStepViewState extends State<CookingStepView> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Step ${widget.order}",
-                style: Theme.of(context).textTheme.bodyMedium),
-            Text(widget.instruction,
-                style: Theme.of(context).textTheme.bodySmall)
-          ],
-        ));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Container(
+              color: Theme.of(context).highlightColor,
+              width: constraints.maxWidth,
+              padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+              child: Text("Step ${widget.order + 1}",
+                  style: Theme.of(context).textTheme.bodyLarge));
+        }),
+        Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(widget.instruction,
+                style: Theme.of(context).textTheme.bodySmall))
+      ],
+    );
   }
 }

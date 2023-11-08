@@ -14,38 +14,36 @@ class RecipeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.topLeft, children: [
-      Padding(
-          padding: (Platform.isIOS)
-              ? const EdgeInsets.fromLTRB(16, 40, 16, 64)
-              : const EdgeInsets.fromLTRB(16, 0, 16, 64),
-          child: SingleChildScrollView(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                  child: Text(recipe.recipe.title,
-                      style: Theme.of(context).textTheme.bodyLarge)),
-              Text(recipe.recipe.desc,
+    return Stack(
+      children: [
+        SingleChildScrollView(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+                padding: const EdgeInsets.fromLTRB(8, 112, 8, 0),
+                child: Text(
+                    "${recipe.recipe.person.firstName} ${recipe.recipe.person.lastName}",
+                    style: Theme.of(context).textTheme.bodyMedium)),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: Text(recipe.recipe.familyRelation ?? "",
+                    style: Theme.of(context).textTheme.bodyMedium)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: Text(recipe.recipe.desc,
                   style: Theme.of(context).textTheme.bodySmall),
-              Text(
-                  "${recipe.recipe.person.firstName} ${recipe.recipe.person.middleName} ${recipe.recipe.person.lastName}",
-                  style: Theme.of(context).textTheme.bodyMedium),
-              Text(recipe.recipe.familyRelation ?? "",
-                  style: Theme.of(context).textTheme.bodyMedium),
-              IngredientsView(ingredients: recipe.ingredients),
-              CookingStepsView(cookingSteps: recipe.cookingSteps)
-            ],
-          ))),
-      LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-        return Container(
-            width: constraints.maxWidth,
-            padding: EdgeInsets.fromLTRB(16, constraints.maxHeight - 64, 16, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              return IngredientsView(
+                  ingredients: recipe.ingredients,
+                  fullWidth: constraints.maxWidth);
+            }),
+            CookingStepsView(cookingSteps: recipe.cookingSteps),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
                     onPressed: () {
@@ -66,8 +64,22 @@ class RecipeView extends StatelessWidget {
                     child: Text("Edit",
                         style: Theme.of(context).textTheme.bodyMedium))
               ],
-            ));
-      })
-    ]);
+            )
+          ],
+        )),
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Container(
+            height: 100,
+            width: constraints.maxWidth,
+            color: Theme.of(context).primaryColor,
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 48, 8, 0),
+                child: Text(recipe.recipe.title,
+                    style: Theme.of(context).textTheme.bodyLarge)),
+          );
+        }),
+      ],
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/view/window/default.dart';
+import 'package:recipe_roots/view/window/family_tree/family_tree_view.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_add.dart';
@@ -23,7 +24,7 @@ class NavigationBarState extends State<NavigationBar> {
 
   NavigationBarState() {
     _widgetOptions = <Widget>[
-      const DefaultView(),
+      const FamilyTreeView(),
       RecipeViews(
         goToRecipeAdd: _addRecipeView,
         recipeViewAction: (value) {

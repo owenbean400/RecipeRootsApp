@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
+import 'package:recipe_roots/view/widget/header_backspace.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/cooking_steps_view.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/ingredients_view.dart';
 
@@ -47,12 +48,6 @@ class RecipeView extends StatelessWidget {
                     onPressed: () {
                       goToRecipeView();
                     },
-                    child: Text("Back",
-                        style: Theme.of(context).textTheme.bodyMedium)),
-                TextButton(
-                    onPressed: () {
-                      goToRecipeView();
-                    },
                     child: Text("Delete",
                         style: Theme.of(context).textTheme.bodyMedium)),
                 TextButton(
@@ -65,18 +60,8 @@ class RecipeView extends StatelessWidget {
             )
           ],
         )),
-        LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-          return Container(
-            height: 100,
-            width: constraints.maxWidth,
-            color: Theme.of(context).primaryColor,
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 48, 8, 0),
-                child: Text(recipe.recipe.title,
-                    style: Theme.of(context).textTheme.bodyLarge)),
-          );
-        }),
+        HeaderBackspace(
+            title: recipe.recipe.title, backSpaceAction: goToRecipeView),
       ],
     );
   }

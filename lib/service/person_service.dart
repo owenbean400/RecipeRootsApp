@@ -44,16 +44,26 @@ class PersonService {
   }
 
   Future<List<Person>> getAllPeople() async {
-    List<Person> people = [];
+    Person owen = Person(
+        id: 1, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
+    Person david =
+        Person(id: 2, firstName: "David", middleName: "Lee", lastName: "Bean");
+    Person ray =
+        Person(id: 3, firstName: "Raymond", middleName: "", lastName: "Bean");
+    Person julia =
+        Person(id: 4, firstName: "Julia", middleName: "", lastName: "Bean");
+    Person sarah =
+        Person(id: 5, firstName: "Sarah", middleName: "", lastName: "Beiling");
+    Person kristine = Person(
+        id: 6, firstName: "Kristine", middleName: "", lastName: "Guaraldo");
+    Person rosalie =
+        Person(id: 7, firstName: "Rosalie", middleName: "", lastName: "Bean");
+    Person bruce =
+        Person(id: 8, firstName: "Bruce", middleName: "", lastName: "Bean");
+    Person elalane =
+        Person(id: 9, firstName: "Elaina", middleName: "", lastName: "Bean");
 
-    people.add(Person(
-        id: 1, firstName: "Olivea", middleName: "Grace", lastName: "Bean"));
-    people.add(Person(
-        id: 2, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean"));
-    people.add(
-        Person(id: 3, firstName: "David", middleName: "Lee", lastName: "Bean"));
-
-    return people;
+    return [owen, david, ray, julia, sarah, kristine, rosalie, bruce, elalane];
   }
 
   /// Gets all of the family relation of the from person

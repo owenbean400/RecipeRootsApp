@@ -5,7 +5,10 @@ import 'package:recipe_roots/view/window/recipe/widgets/advance_recipe_search_ch
 
 class RecipeSearchBar extends StatefulWidget {
   final Function(String, bool, bool, bool, bool, bool) searchForRecipes;
-  const RecipeSearchBar({Key? key, required this.searchForRecipes})
+  final Function addRecipe;
+
+  const RecipeSearchBar(
+      {Key? key, required this.searchForRecipes, required this.addRecipe})
       : super(key: key);
 
   @override
@@ -87,7 +90,7 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                     searchForRecipes();
                   },
                   child: const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: SizedBox(
                         height: 64,
                         width: 64,
@@ -123,16 +126,28 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                     });
                   },
                   child: Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: SizedBox(
-                        height: 64,
-                        width: 64,
+                        height: 48,
+                        width: 48,
                         child: Icon(
                           (showAdvanceMenu)
                               ? Icons.arrow_drop_up_rounded
                               : Icons.arrow_drop_down_rounded,
                           size: 32,
                         ),
+                      )),
+                ),
+                InkWell(
+                  onTap: () {
+                    widget.addRecipe();
+                  },
+                  child: const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: SizedBox(
+                        height: 48,
+                        width: 48,
+                        child: Icon(Icons.library_add_outlined, size: 32),
                       )),
                 )
               ])),

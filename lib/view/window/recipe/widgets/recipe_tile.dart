@@ -5,6 +5,7 @@ class RecipeTile extends StatelessWidget {
   final String title;
   final String personName;
   final String? familyRelation;
+  final bool? isBottomBorder;
   final String description;
   final ValueSetter<int?> onTapRecipe;
 
@@ -15,7 +16,8 @@ class RecipeTile extends StatelessWidget {
       this.familyRelation,
       required this.description,
       this.id,
-      required this.onTapRecipe});
+      required this.onTapRecipe,
+      this.isBottomBorder});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,10 @@ class RecipeTile extends StatelessWidget {
           onTapRecipe(id);
         },
         child: Container(
-            decoration: const BoxDecoration(
-                border: Border(bottom: (BorderSide(color: Colors.grey)))),
+            decoration: BoxDecoration(
+                border: (isBottomBorder ?? true)
+                    ? const Border(bottom: (BorderSide(color: Colors.grey)))
+                    : const Border()),
             padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
             child: SizedBox(
               height: 128,
@@ -72,11 +76,13 @@ class RecipeTile extends StatelessWidget {
                             ],
                           )),
                     ),
-                    Container(
-                      width: 128,
-                      height: 128,
-                      color: Colors.grey,
-                    )
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                        child: Container(
+                          width: 128,
+                          height: 128,
+                          color: Colors.grey,
+                        ))
                   ]),
             )));
   }

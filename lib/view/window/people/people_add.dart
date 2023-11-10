@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/service/person_service.dart';
+import 'package:recipe_roots/view/widget/header_backspace.dart';
 import 'package:recipe_roots/view/window/people/widgets/people_field.dart';
 import 'package:recipe_roots/view/window/people/widgets/people_text_field.dart';
 
@@ -86,7 +85,7 @@ class PeopleAddState extends State<PeopleAdd> {
     return familyInformation;
   }
 
-  cancelNewPerson() {
+  cancelPerson() {
     widget.setPeopleNavViewFunction();
   }
 
@@ -98,8 +97,6 @@ class PeopleAddState extends State<PeopleAdd> {
     if (widget.id == null) {
       buttonActions.add(
           ElevatedActionButton(action: addNewPerson, buttonText: "Add Person"));
-      buttonActions.add(
-          ElevatedActionButton(action: cancelNewPerson, buttonText: "Cancel"));
 
       familyInformation.add(PeopleTextField(
           textFieldController: _firstNameController, labelText: "First Name"));
@@ -116,15 +113,11 @@ class PeopleAddState extends State<PeopleAdd> {
           action: editPersonMode, buttonText: "Edit Person"));
       buttonActions.add(
           ElevatedActionButton(action: deletePerson, buttonText: "Delete"));
-      buttonActions.add(
-          ElevatedActionButton(action: cancelNewPerson, buttonText: "Cancel"));
 
       familyInformation = loadInFamilyRelationText(widget.id!);
     } else {
       buttonActions.add(
           ElevatedActionButton(action: addNewPerson, buttonText: "Update"));
-      buttonActions.add(
-          ElevatedActionButton(action: cancelNewPerson, buttonText: "Cancel"));
 
       loadInFamilyRelation(widget.id!);
 
@@ -140,23 +133,31 @@ class PeopleAddState extends State<PeopleAdd> {
           labelText: "Family Relation"));
     }
 
-    return Container(
-        padding: (Platform.isIOS)
-            ? const EdgeInsets.fromLTRB(16, 40, 16, 16)
-            : const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...familyInformation,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: buttonActions,
-              )
-            ],
-          ),
-        ));
+    return Column(children: [
+      HeaderBackspace(
+          backSpaceAction: cancelPerson,
+          title: (widget.id == null)
+              ? "Add Person"
+              : (!editingMode)
+                  ? "View Person"
+                  : "Edit Person"),
+      Expanded(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...familyInformation,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: buttonActions,
+                    )
+                  ],
+                ),
+              )))
+    ]);
   }
 }
 

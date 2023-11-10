@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
+import 'package:recipe_roots/domain/family_tree.dart';
 import 'package:recipe_roots/view/window/default.dart';
+import 'package:recipe_roots/view/window/family_tree/family_tree_add.dart';
 import 'package:recipe_roots/view/window/family_tree/family_tree_view.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
@@ -24,7 +26,9 @@ class NavigationBarState extends State<NavigationBar> {
 
   NavigationBarState() {
     _widgetOptions = <Widget>[
-      const FamilyTreeView(),
+      FamilyTreeView(
+        setAddFamilyTree: _addFamilyTree,
+      ),
       RecipeViews(
         goToRecipeAdd: _addRecipeView,
         recipeViewAction: (value) {
@@ -106,6 +110,21 @@ class NavigationBarState extends State<NavigationBar> {
     _widgetOptions[1] = RecipeAdd(goToRecipeViews: _viewRecipesViews);
     setState(() {
       _selectedIndex = 1;
+    });
+  }
+
+  void _addFamilyTree(FamilyTree? familyTree) {
+    _widgetOptions[0] = FamilyTreeAdd(
+        familyTree: familyTree, goToViewFamilyTree: _viewFamilyTreeViews);
+    setState(() {
+      _selectedIndex = 0;
+    });
+  }
+
+  void _viewFamilyTreeViews() {
+    _widgetOptions[0] = FamilyTreeView(setAddFamilyTree: _addFamilyTree);
+    setState(() {
+      _selectedIndex = 0;
     });
   }
 

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:recipe_roots/domain/family_tree.dart';
 import 'package:recipe_roots/service/family_service.dart';
+import 'package:recipe_roots/view/widget/header_add.dart';
 
 class FamilyTreeView extends StatefulWidget {
-  const FamilyTreeView({super.key});
+  final ValueSetter<FamilyTree?> setAddFamilyTree;
+
+  const FamilyTreeView({super.key, required this.setAddFamilyTree});
 
   @override
   FamilyTreeViewState createState() => FamilyTreeViewState();
@@ -14,7 +17,15 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
   final Future<List<FamilyTree>> familyTree = FamilyService().getFamilyTree();
   SugiyamaConfiguration builder = SugiyamaConfiguration();
 
-  void isAddFamilyTree() {}
+  void addFamilyTree() {
+    widget.setAddFamilyTree(null);
+  }
+
+  void editFamilyTree(FamilyTree? familyTree) {
+    if (familyTree != null) {
+      widget.setAddFamilyTree(familyTree);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,37 +65,7 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
             builder.bendPointShape = CurvedBendPointShape(curveLength: 5);
 
             return Column(children: [
-              LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  return Container(
-                    padding: const EdgeInsets.fromLTRB(16, 48, 0, 16),
-                    width: constraints.maxWidth,
-                    color: Theme.of(context).primaryColor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Family Tree",
-                            style: Theme.of(context).textTheme.bodyLarge),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                          child: InkWell(
-                            onTap: () {
-                              isAddFamilyTree();
-                            },
-                            child: Text(
-                              "+",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColorDark,
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
+              HeaderAdd(addAction: addFamilyTree, title: "Family Tree"),
               Expanded(
                   child: InteractiveViewer(
                       constrained: false,
@@ -105,19 +86,23 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
                             ..style = PaintingStyle.stroke,
                           builder: (Node node) {
                             FamilyTree? familyNode = node.key?.value;
-                            return Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Text(
-                                    "${familyNode?.child?.firstName[0] ?? "?"}${familyNode?.child?.lastName[0] ?? "?"}"));
+                            return InkWell(
+                                onDoubleTap: () {
+                                  editFamilyTree(familyNode);
+                                },
+                                child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Text(
+                                        "${familyNode?.child?.firstName[0] ?? "?"}${familyNode?.child?.lastName[0] ?? "?"}")));
                           })))
             ]);
           }
 
-          return Container();
+          return HeaderAdd(addAction: addFamilyTree, title: "Family Tree");
         });
   }
 }

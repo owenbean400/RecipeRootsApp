@@ -5,13 +5,15 @@ class FamilyRelationTile extends StatelessWidget {
   final String name;
   final String relationship;
   final ValueSetter<int> setEditView;
+  final bool? isBottomBorder;
 
   const FamilyRelationTile(
       {super.key,
       required this.name,
       required this.relationship,
       required this.id,
-      required this.setEditView});
+      required this.setEditView,
+      this.isBottomBorder});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,10 @@ class FamilyRelationTile extends StatelessWidget {
         }
       },
       child: Container(
-        decoration: const BoxDecoration(
-            border: Border(bottom: (BorderSide(color: Colors.grey)))),
+        decoration: BoxDecoration(
+            border: (isBottomBorder ?? true)
+                ? const Border(bottom: (BorderSide(color: Colors.grey)))
+                : const Border()),
         padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

@@ -4,21 +4,24 @@ import 'package:recipe_roots/domain/person.dart';
 class FamilyService {
   Future<List<FamilyTree>> getFamilyTree() async {
     // TODO: Replace hard code with actually database query
-    Person owen =
-        Person(firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
+    Person owen = Person(
+        id: 1, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
     Person david =
-        Person(firstName: "David", middleName: "Lee", lastName: "Bean");
-    Person ray = Person(firstName: "Raymond", middleName: "", lastName: "Bean");
-    Person julia = Person(firstName: "Julia", middleName: "", lastName: "Bean");
+        Person(id: 2, firstName: "David", middleName: "Lee", lastName: "Bean");
+    Person ray =
+        Person(id: 3, firstName: "Raymond", middleName: "", lastName: "Bean");
+    Person julia =
+        Person(id: 4, firstName: "Julia", middleName: "", lastName: "Bean");
     Person sarah =
-        Person(firstName: "Sarah", middleName: "", lastName: "Beiling");
-    Person kristine =
-        Person(firstName: "Kristine", middleName: "", lastName: "Guaraldo");
+        Person(id: 5, firstName: "Sarah", middleName: "", lastName: "Beiling");
+    Person kristine = Person(
+        id: 6, firstName: "Kristine", middleName: "", lastName: "Guaraldo");
     Person rosalie =
-        Person(firstName: "Rosalie", middleName: "", lastName: "Bean");
-    Person bruce = Person(firstName: "Bruce", middleName: "", lastName: "Bean");
+        Person(id: 7, firstName: "Rosalie", middleName: "", lastName: "Bean");
+    Person bruce =
+        Person(id: 8, firstName: "Bruce", middleName: "", lastName: "Bean");
     Person elalane =
-        Person(firstName: "Elaina", middleName: "", lastName: "Bean");
+        Person(id: 9, firstName: "Elaina", middleName: "", lastName: "Bean");
 
     FamilyTree owenT = FamilyTree(id: 1, child: owen);
     FamilyTree sarahT = FamilyTree(id: 8, child: sarah);

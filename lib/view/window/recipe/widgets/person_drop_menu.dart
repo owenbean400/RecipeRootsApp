@@ -3,20 +3,23 @@ import 'package:recipe_roots/domain/person.dart';
 
 class PersonButton extends StatefulWidget {
   final List<Person> people;
-  const PersonButton({super.key, required this.people});
+  final Person? personChosen;
+  const PersonButton({super.key, required this.people, this.personChosen});
 
   @override
   State<PersonButton> createState() => PersonButtonState();
 }
 
 class PersonButtonState extends State<PersonButton> {
-  Person dropdownValue =
-      Person(id: null, firstName: "", middleName: "", lastName: "");
+  Person? dropdownValue;
 
   @override
   Widget build(BuildContext context) {
-    if (dropdownValue.id == null) {
-      dropdownValue = widget.people.first;
+    if (dropdownValue?.id == null) {
+      if (widget.personChosen != null) {
+        dropdownValue = widget.people
+            .firstWhere((element) => element.id == widget.personChosen!.id);
+      }
     }
 
     return DropdownButton<Person>(

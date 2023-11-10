@@ -56,18 +56,19 @@ class RecipeViewsState extends State<RecipeViews> {
               if (snapshot.hasData) {
                 List<RecipeTile> recipeTitles = [];
 
-                for (var element in snapshot.data!) {
+                for (int i = 0; i < snapshot.data!.length; i++) {
                   recipeTitles.add(RecipeTile(
-                    title: element.title,
-                    personName:
-                        "${element.person.firstName} ${element.person.lastName}",
-                    description: element.desc,
-                    familyRelation: element.familyRelation,
-                    onTapRecipe: (value) {
-                      goToRecipePage(element.id);
-                    },
-                  ));
+                      title: snapshot.data![i].title,
+                      personName:
+                          "${snapshot.data![i].person.firstName} ${snapshot.data![i].person.lastName}",
+                      description: snapshot.data![i].desc,
+                      familyRelation: snapshot.data![i].familyRelation,
+                      onTapRecipe: (value) {
+                        goToRecipePage(snapshot.data![i].id);
+                      },
+                      isBottomBorder: i != snapshot.data!.length - 1));
                 }
+
                 return SingleChildScrollView(
                     child: Padding(
                         padding: (Platform.isIOS)
@@ -82,24 +83,13 @@ class RecipeViewsState extends State<RecipeViews> {
                 return const Text("Waiting for search");
               }
             }),
-        LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-          return Padding(
-              padding: EdgeInsets.fromLTRB(
-                  constraints.maxWidth - 84, constraints.maxHeight - 64, 0, 0),
-              child: TextButton(
-                  onPressed: () {
-                    widget.goToRecipeAdd();
-                  },
-                  child: Text("+",
-                      style: Theme.of(context).textTheme.bodyMedium)));
-        }),
         RecipeSearchBar(
           searchForRecipes: (searchStr, isSearchTitle, isSearchDescription,
               isSearchPeople, isSearchFamilyRelation, isSearchIngredients) {
             searchRecipe(searchStr, isSearchTitle, isSearchDescription,
                 isSearchPeople, isSearchFamilyRelation, isSearchIngredients);
           },
+          addRecipe: widget.goToRecipeAdd,
         ),
       ],
     ));

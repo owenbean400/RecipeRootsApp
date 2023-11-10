@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/service/person_service.dart';
+import 'package:recipe_roots/view/widget/header_add.dart';
 import 'package:recipe_roots/view/window/people/widgets/family_relation_list.dart';
 
 class PeopleView extends StatefulWidget {
@@ -30,51 +29,34 @@ class PeopleViewState extends State<PeopleView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: (Platform.isIOS)
-            ? const EdgeInsets.fromLTRB(0, 40, 0, 0)
-            : const EdgeInsets.all(0),
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: [
-            SingleChildScrollView(
-                child: FutureBuilder<List<FamilyRelation>>(
-                    future: familyRelations,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<FamilyRelationTile> familyRelationsList = [];
+    return FutureBuilder<List<FamilyRelation>>(
+        future: familyRelations,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<FamilyRelationTile> familyRelationsList = [];
 
-                        for (FamilyRelation familyRelation in snapshot.data!) {
-                          familyRelationsList.add(FamilyRelationTile(
-                              id: familyRelation.id,
-                              name: familyRelation.person.firstName,
-                              relationship: familyRelation.familyRelation,
-                              setEditView: widget.setEditPerson));
-                        }
+            for (int i = 0; i < snapshot.data!.length; i++) {
+              familyRelationsList.add(FamilyRelationTile(
+                  id: snapshot.data![i].id,
+                  name: snapshot.data![i].person.firstName,
+                  relationship: snapshot.data![i].familyRelation,
+                  setEditView: widget.setEditPerson,
+                  isBottomBorder: i != snapshot.data!.length - 1));
+            }
 
-                        return Column(
-                          children: familyRelationsList,
-                        );
-                      } else if (snapshot.hasError) {
-                        return const Text("Error getting family relation");
-                      } else {
-                        return const Text(
-                            "Waiting for family relation to load");
-                      }
-                    })),
-            LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-              return Padding(
-                  padding: EdgeInsets.fromLTRB(constraints.maxWidth - 84,
-                      constraints.maxHeight - 64, 0, 0),
-                  child: TextButton(
-                      onPressed: () {
-                        goToAddFamiltRelation();
-                      },
-                      child: Text("+",
-                          style: Theme.of(context).textTheme.bodyMedium)));
-            }),
-          ],
-        ));
+            return Column(
+              children: [
+                HeaderAdd(addAction: goToAddFamiltRelation, title: "People"),
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                  children: familyRelationsList,
+                )))
+              ],
+            );
+          }
+
+          return HeaderAdd(addAction: goToAddFamiltRelation, title: "People");
+        });
   }
 }

@@ -4,21 +4,21 @@ import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
 
 class PersonService {
+  // TODO: #5 Person query
   Person getPerson(id) {
-    // TODO: Replace with database query
     return Person(firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
   }
 
+  // TODO: #16 Query for a person
   FamilyRelation getFamilyRelationByID(int id) {
-    // TODO: Replace with database query
     Person person1 = Person(
         id: id, firstName: "Olivea", middleName: "Grace", lastName: "Bean");
 
     return FamilyRelation(person: person1, familyRelation: "Sister");
   }
 
+  // TODO: #27, Edit family relation and person
   void updateFamilyRelation(FamilyRelation familyRelation) {
-    // TODO: Replace with add service function
     log(familyRelation.person.firstName);
     log(familyRelation.person.middleName);
     log(familyRelation.person.lastName);
@@ -31,14 +31,15 @@ class PersonService {
     return FamilyRelation(person: person, familyRelation: "Family Relation");
   }
 
+  // TODO: #7 and #5, insert a person and family relation
   void addFamilyRelation(FamilyRelation familyRelation) {
-    // TODO: Replace with add service function
     log(familyRelation.person.firstName);
     log(familyRelation.person.middleName);
     log(familyRelation.person.lastName);
     log(familyRelation.familyRelation);
   }
 
+  // TODO: #36, delete person
   void deleteFamilyRelationAndPersonFromID(int id) {
     log("Deleted!");
   }
@@ -66,11 +67,10 @@ class PersonService {
     return [owen, david, ray, julia, sarah, kristine, rosalie, bruce, elalane];
   }
 
-  /// Gets all of the family relation of the from person
+  // TODO: #28, Query all family relations
   Future<List<FamilyRelation>> getAllFamilyRelation(Person person) async {
     List<FamilyRelation> familyRelations = [];
 
-    // TODO: Replace with database query
     Person person1 =
         Person(firstName: "Olivea", middleName: "Grace", lastName: "Bean");
     Person person2 =

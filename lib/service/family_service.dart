@@ -2,8 +2,8 @@ import 'package:recipe_roots/domain/family_tree.dart';
 import 'package:recipe_roots/domain/person.dart';
 
 class FamilyService {
+  // TODO: #30 Get Family Tree of all
   Future<List<FamilyTree>> getFamilyTree() async {
-    // TODO: Replace hard code with actually database query
     Person owen = Person(
         id: 1, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean");
     Person david =
@@ -55,4 +55,7 @@ class FamilyService {
       elalaneT
     ];
   }
+
+  // TODO: #37 Query family tree
+  void updateFamilyTree(FamilyTree familyTree) async {}
 }

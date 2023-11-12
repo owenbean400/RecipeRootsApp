@@ -77,6 +77,32 @@ class RecipeService {
     return recipes;
   }
 
+  // #11 Query for recipe base on title
+  Future<List<Recipe>> getRecipesByTitle(String title) async {
+    return [];
+  }
+
+  // #38 Query for recipe by description
+  Future<List<Recipe>> getRecipesByDescription(String description) async {
+    return [];
+  }
+
+  // #17 Query for recipe by person
+  Future<List<Recipe>> getRecipesByPerson(String name) async {
+    return [];
+  }
+
+  // TODO: #12 Query for recipes based on family relation
+  Future<List<Recipe>> getRecipesByFamilyRelation(String familyRelation) async {
+    return [];
+  }
+
+  // TODO: #14 Query for recipes based on ingredients
+  Future<List<Recipe>> getRecipesByIngredients(String ingredient) async {
+    return [];
+  }
+
+  // TODO: #39, Query for everything.
   EntireRecipe getRecipe(int recipe_id) {
     List<CookingStep> cookingSteps = [];
     List<Ingredient> ingredients = [];
@@ -146,5 +172,6 @@ class RecipeService {
         recipe: recipe, cookingSteps: cookingSteps, ingredients: ingredients);
   }
 
+  // TODO: Mooshed in #2, Add Recipe
   addRecipe(EntireRecipe entireRecipe) {}
 }

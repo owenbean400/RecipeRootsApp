@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_roots/domain/family_relation.dart';
 
 class FamilyRelationTile extends StatelessWidget {
-  final int? id;
-  final String name;
-  final String relationship;
-  final ValueSetter<int> setEditView;
+  final FamilyRelation familyRelation;
+  final ValueSetter<FamilyRelation> setEditView;
   final bool? isBottomBorder;
 
   const FamilyRelationTile(
       {super.key,
-      required this.name,
-      required this.relationship,
-      required this.id,
       required this.setEditView,
-      this.isBottomBorder});
+      this.isBottomBorder,
+      required this.familyRelation});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (id != null) {
-          setEditView(id!);
-        }
+        setEditView(familyRelation);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -31,8 +26,10 @@ class FamilyRelationTile extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(name, style: Theme.of(context).textTheme.bodyMedium),
-          Text(relationship, style: Theme.of(context).textTheme.bodyMedium)
+          Text(familyRelation.person.firstName,
+              style: Theme.of(context).textTheme.bodyMedium),
+          Text(familyRelation.familyRelation,
+              style: Theme.of(context).textTheme.bodyMedium)
         ]),
       ),
     );

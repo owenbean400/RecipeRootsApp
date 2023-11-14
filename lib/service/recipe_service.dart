@@ -103,7 +103,7 @@ class RecipeService {
   }
 
   // TODO: #39, Query for everything.
-  EntireRecipe getRecipe(int recipe_id) {
+  EntireRecipe getRecipe(int recipeId) {
     List<CookingStep> cookingSteps = [];
     List<Ingredient> ingredients = [];
 

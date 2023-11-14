@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
-import 'package:recipe_roots/domain/person.dart';
+import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_add.dart';
 import 'package:recipe_roots/view/window/people/widgets/family_relation_list.dart';
 
 class PeopleView extends StatefulWidget {
   final Function setPeopleNavAddFunction;
-  final ValueSetter<int> setEditPerson;
+  final ValueSetter<FamilyRelation> setEditPerson;
 
   const PeopleView(
       {super.key,
@@ -19,9 +19,8 @@ class PeopleView extends StatefulWidget {
 }
 
 class PeopleViewState extends State<PeopleView> {
-  Future<List<FamilyRelation>> familyRelations = PersonService()
-      .getAllFamilyRelation(Person(
-          id: 1, firstName: "Owen", middleName: "Guaraldo", lastName: "Bean"));
+  Future<List<FamilyRelation>> familyRelations =
+      PersonService().getAllFamilyRelation(ThePersonSingleton().user!);
 
   goToAddFamiltRelation() async {
     widget.setPeopleNavAddFunction();
@@ -37,9 +36,7 @@ class PeopleViewState extends State<PeopleView> {
 
             for (int i = 0; i < snapshot.data!.length; i++) {
               familyRelationsList.add(FamilyRelationTile(
-                  id: snapshot.data![i].id,
-                  name: snapshot.data![i].person.firstName,
-                  relationship: snapshot.data![i].familyRelation,
+                  familyRelation: snapshot.data![i],
                   setEditView: widget.setEditPerson,
                   isBottomBorder: i != snapshot.data!.length - 1));
             }

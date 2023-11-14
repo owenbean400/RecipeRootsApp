@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/person.dart';
+import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
 import 'package:recipe_roots/view/window/people/widgets/people_field.dart';
@@ -8,9 +9,10 @@ import 'package:recipe_roots/view/window/people/widgets/people_text_field.dart';
 
 class PeopleAdd extends StatefulWidget {
   final Function setPeopleNavViewFunction;
-  final int? id;
+  final FamilyRelation? familyRelation;
 
-  const PeopleAdd({super.key, required this.setPeopleNavViewFunction, this.id});
+  const PeopleAdd(
+      {super.key, required this.setPeopleNavViewFunction, this.familyRelation});
 
   @override
   PeopleAddState createState() => PeopleAddState();
@@ -38,49 +40,54 @@ class PeopleAddState extends State<PeopleAdd> {
             lastName: _lastNameController.text),
         familyRelation: _familyRelationController.text);
 
-    PersonService().addFamilyRelation(familyRelation);
-    widget.setPeopleNavViewFunction();
+    PersonService()
+        .addFamilyRelation(ThePersonSingleton().user!, familyRelation)
+        .then((value) => {widget.setPeopleNavViewFunction()});
   }
 
   updatePerson() {
     FamilyRelation familyRelation = FamilyRelation(
-        id: widget.id,
+        id: widget.familyRelation!.id,
         person: Person(
+            id: widget.familyRelation!.person.id,
             firstName: _firstNameController.text,
             middleName: _middleNameController.text,
             lastName: _lastNameController.text),
         familyRelation: _familyRelationController.text);
 
-    PersonService().updateFamilyRelation(familyRelation);
-    widget.setPeopleNavViewFunction();
+    PersonService()
+        .updateFamilyRelation(familyRelation)
+        .then((value) => {widget.setPeopleNavViewFunction()});
   }
 
   deletePerson() {
-    PersonService().deleteFamilyRelationAndPersonFromID(widget.id!);
+    PersonService().deleteFamilyRelationAndPersonFromID(widget.familyRelation!);
     widget.setPeopleNavViewFunction();
   }
 
-  loadInFamilyRelation(int id) {
-    FamilyRelation familyRelation = PersonService().getFamilyRelationByID(id);
-
-    _firstNameController.text = familyRelation.person.firstName;
-    _middleNameController.text = familyRelation.person.middleName;
-    _lastNameController.text = familyRelation.person.lastName;
-    _familyRelationController.text = familyRelation.familyRelation;
+  loadInFamilyRelation() {
+    _firstNameController.text = widget.familyRelation?.person.firstName ?? "";
+    _middleNameController.text = widget.familyRelation?.person.middleName ?? "";
+    _lastNameController.text = widget.familyRelation?.person.lastName ?? "";
+    _familyRelationController.text =
+        widget.familyRelation?.familyRelation ?? "";
   }
 
-  List<PeopleText> loadInFamilyRelationText(int id) {
-    FamilyRelation familyRelation = PersonService().getFamilyRelationByID(id);
+  List<PeopleText> loadInFamilyRelationText() {
     List<PeopleText> familyInformation = [];
 
     familyInformation.add(PeopleText(
-        labelText: "First Name", text: familyRelation.person.firstName));
+        labelText: "First Name",
+        text: widget.familyRelation?.person.firstName ?? ""));
     familyInformation.add(PeopleText(
-        labelText: "Middle Name", text: familyRelation.person.middleName));
+        labelText: "Middle Name",
+        text: widget.familyRelation?.person.middleName ?? ""));
     familyInformation.add(PeopleText(
-        labelText: "Last Name", text: familyRelation.person.lastName));
+        labelText: "Last Name",
+        text: widget.familyRelation?.person.lastName ?? ""));
     familyInformation.add(PeopleText(
-        labelText: "Family Relation", text: familyRelation.familyRelation));
+        labelText: "Family Relation",
+        text: widget.familyRelation?.familyRelation ?? ""));
 
     return familyInformation;
   }
@@ -94,7 +101,7 @@ class PeopleAddState extends State<PeopleAdd> {
     List<ElevatedActionButton> buttonActions = [];
     List<Widget> familyInformation = [];
 
-    if (widget.id == null) {
+    if (widget.familyRelation == null) {
       buttonActions.add(
           ElevatedActionButton(action: addNewPerson, buttonText: "Add Person"));
 
@@ -111,15 +118,19 @@ class PeopleAddState extends State<PeopleAdd> {
     } else if (!editingMode) {
       buttonActions.add(ElevatedActionButton(
           action: editPersonMode, buttonText: "Edit Person"));
-      buttonActions.add(
-          ElevatedActionButton(action: deletePerson, buttonText: "Delete"));
 
-      familyInformation = loadInFamilyRelationText(widget.id!);
+      // Can't delete yourself
+      if (ThePersonSingleton().user!.id != widget.familyRelation!.person.id) {
+        buttonActions.add(
+            ElevatedActionButton(action: deletePerson, buttonText: "Delete"));
+      }
+
+      familyInformation = loadInFamilyRelationText();
     } else {
       buttonActions.add(
-          ElevatedActionButton(action: addNewPerson, buttonText: "Update"));
+          ElevatedActionButton(action: updatePerson, buttonText: "Update"));
 
-      loadInFamilyRelation(widget.id!);
+      loadInFamilyRelation();
 
       familyInformation.add(PeopleTextField(
           textFieldController: _firstNameController, labelText: "First Name"));
@@ -136,7 +147,7 @@ class PeopleAddState extends State<PeopleAdd> {
     return Column(children: [
       HeaderBackspace(
           backSpaceAction: cancelPerson,
-          title: (widget.id == null)
+          title: (widget.familyRelation == null)
               ? "Add Person"
               : (!editingMode)
                   ? "View Person"

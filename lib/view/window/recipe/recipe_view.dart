@@ -20,15 +20,23 @@ class RecipeView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-                padding: const EdgeInsets.fromLTRB(8, 112, 8, 0),
-                child: Text(
-                    "${recipe.recipe.person.firstName} ${recipe.recipe.person.lastName}",
-                    style: Theme.of(context).textTheme.bodyMedium)),
+            const Padding(padding: EdgeInsets.fromLTRB(8, 112, 8, 0)),
+            (recipe.authors.isNotEmpty)
+                ? Column(
+                    children: recipe.authors
+                        .map((author) => Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                              child: Text(
+                                  "${author.firstName} ${author.lastName}",
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
+                            ))
+                        .toList(),
+                  )
+                : Container(),
             Padding(
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                child: Text(recipe.recipe.familyRelation ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium)),
+                child: Text("", style: Theme.of(context).textTheme.bodyMedium)),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(recipe.recipe.desc,

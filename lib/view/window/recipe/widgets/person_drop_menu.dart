@@ -4,7 +4,9 @@ import 'package:recipe_roots/domain/person.dart';
 class PersonButton extends StatefulWidget {
   final List<Person> people;
   final Person? personChosen;
-  const PersonButton({super.key, required this.people, this.personChosen});
+  final ValueSetter<Person>? setPerson;
+  const PersonButton(
+      {super.key, required this.people, this.personChosen, this.setPerson});
 
   @override
   State<PersonButton> createState() => PersonButtonState();
@@ -15,11 +17,9 @@ class PersonButtonState extends State<PersonButton> {
 
   @override
   Widget build(BuildContext context) {
-    if (dropdownValue?.id == null) {
-      if (widget.personChosen != null) {
-        dropdownValue = widget.people
-            .firstWhere((element) => element.id == widget.personChosen!.id);
-      }
+    if (widget.personChosen != null) {
+      dropdownValue = widget.people
+          .firstWhere((element) => element.id == widget.personChosen!.id);
     }
 
     return DropdownButton<Person>(
@@ -33,9 +33,13 @@ class PersonButtonState extends State<PersonButton> {
         color: Theme.of(context).primaryColor,
       ),
       onChanged: (Person? value) {
-        setState(() {
-          dropdownValue = value!;
-        });
+        if (widget.setPerson != null) {
+          widget.setPerson!(value!);
+        } else {
+          setState(() {
+            dropdownValue = value!;
+          });
+        }
       },
       items: widget.people.map<DropdownMenuItem<Person>>((Person value) {
         return DropdownMenuItem<Person>(

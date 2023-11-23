@@ -1,8 +1,8 @@
 class Ingredient {
   int? id;
-  final String amount;
-  final String unit;
-  final String ingredient;
+  String amount;
+  String unit;
+  String ingredient;
   String? prepMethod;
 
   Ingredient(
@@ -11,4 +11,12 @@ class Ingredient {
       required this.unit,
       required this.ingredient,
       this.prepMethod});
+
+  factory Ingredient.fromSQL(Map<String, Object?> sqlMap) {
+    return Ingredient(
+        id: sqlMap["id"] as int,
+        amount: sqlMap["amount"] as String,
+        unit: sqlMap["unti"] as String,
+        ingredient: sqlMap["ingredient"] as String);
+  }
 }

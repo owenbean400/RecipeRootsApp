@@ -1,5 +1,8 @@
+import 'package:recipe_roots/domain/cooking_step.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
+import 'package:recipe_roots/domain/ingredient.dart';
 import 'package:recipe_roots/domain/person.dart';
+import 'package:recipe_roots/domain/recipe.dart';
 import 'package:sqflite/sqflite.dart';
 
 class RecipeRootsDAO {
@@ -29,14 +32,111 @@ class RecipeRootsDAO {
     return database;
   }
 
-  Future<void> setUser(Person person) async {
+  List<Recipe> _sqlMapListToRecipes(List<Map<String, Object?>> recipeMaps) {
+    List<Recipe> recipes = [];
+
+    for (Map<String, Object?> recipeMap in recipeMaps) {
+      recipes.add(Recipe.fromSQL(recipeMap));
+    }
+
+    return recipes;
+  }
+
+  Future<List<Recipe>> getRecipesAll() async {
     Database db = await getDatabase();
 
-    int id = await addPerson(person);
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe");
 
-    person.id = id;
+    return _sqlMapListToRecipes(recipeMaps);
+  }
 
-    await db.rawInsert("INSERT INTO User (person_id) VALUES (?)", [person.id]);
+  Future<List<Recipe>> getRecipesBySearchTitle(String title) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.name LIKE '%' || ? || '%'",
+        [title]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchDescription(String description) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.description LIKE '%' || ? || '%'",
+        [description]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchPeopleOneName(String name) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' OR middle_name LIKE '%' || ? || '%' OR last_name LIKE '%' || ? || '%' )",
+        [name]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchPeopleTwoName(
+      String firstName, String lastName) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' )",
+        [firstName, lastName]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchPeopleThreeName(
+      String firstName, String lastName, String middleName) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' AND middle_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' )",
+        [firstName, lastName, middleName]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchFamilyRelation(
+      String familyRelation) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe, Recipe_To_Person, Family_Relation, Person WHERE Family_Relation.from_person_id = 1 AND Family_Relation.relationship = ? AND Family_Relation.to_person_id = Recipe_To_Person.person_id AND Recipe.id = Recipe_To_Person.recipe_id",
+        [familyRelation]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Recipe>> getRecipesBySearchIngredient(String ingredient) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+        "SELECT DISTINCT r.id, r.name, r.description FROM Recipe as r LEFT JOIN Ingredient as i ON r.id = i.recipe_id WHERE i.ingredient LIKE '%' || ? || '%'",
+        [ingredient]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
+  Future<List<Person>> getAuthorOfRecipe(int recipeId) async {
+    Database db = await getDatabase();
+    List<Person> authors = [];
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT Person.id, Person.first_name, Person.middle_name, Person.last_name FROM Recipe, Person, Recipe_To_Person WHERE Recipe.id = ? AND Recipe.id = Recipe_To_Person.recipe_id AND Recipe_To_Person.person_id = Person.id;",
+        []);
+
+    for (Map<String, Object?> sqlMap in sqlMaps) {
+      authors.add(Person.fromSQL(sqlMap));
+    }
+
+    return authors;
   }
 
   Future<Person?> getUser() async {
@@ -82,6 +182,40 @@ class RecipeRootsDAO {
     return people;
   }
 
+  Future<List<Ingredient>> getIngredientFromRecipe(int recipeId) async {
+    List<Ingredient> ingredients = [];
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT id, amount, unit, ingredient, prep_method FROM Ingredient WHERE recipe_id = ?",
+        [recipeId]);
+
+    for (Map<String, Object?> sqlMap in sqlMaps) {
+      ingredients.add(Ingredient.fromSQL(sqlMap));
+    }
+
+    return ingredients;
+  }
+
+  Future<List<CookingStep>> getCookingSteps(int recipeId) async {
+    List<CookingStep> cookingSteps = [];
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT * FROM Cooking_Steps WHERE recipe_id = ? AND step_order = 'NULL'",
+        [recipeId]);
+
+    while (sqlMaps.length == 1) {
+      cookingSteps.add(CookingStep.fromSQL(sqlMaps[0]));
+
+      sqlMaps = await db.rawQuery(
+          "SELECT * FROM Cooking_Steps WHERE recipe_id = ? AND step_order = ?",
+          [recipeId, cookingSteps[cookingSteps.length - 1].id]);
+    }
+
+    return cookingSteps;
+  }
+
   Future<int> addPerson(Person add) async {
     Database db = await getDatabase();
 
@@ -105,12 +239,62 @@ class RecipeRootsDAO {
         ]);
   }
 
+  Future<int> addRecipe(Recipe recipe) async {
+    Database db = await getDatabase();
+
+    return await db.rawInsert(
+        "INSERT INTO Recipe (name, description) VALUES (?, ?)",
+        [recipe.title, recipe.desc]);
+  }
+
+  Future<void> addCookingSteps(
+      List<CookingStep> cookingSteps, int recipeId) async {
+    Database db = await getDatabase();
+    int priorId = -1;
+
+    for (CookingStep cookingStep in cookingSteps) {
+      priorId = await db.rawInsert(
+          "INSERT INTO Cooking_Steps (recipe_id, step_order, instruction) VALUES (?, ?, ?)",
+          [
+            recipeId,
+            (priorId == -1) ? "NULL" : priorId,
+            cookingStep.instruction
+          ]);
+    }
+  }
+
+  Future<void> addIngredients(Ingredient ingredient, int recipeId) async {
+    Database db = await getDatabase();
+
+    await db.rawInsert(
+        "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient) VALUES (?, ?, ?, ?)",
+        [recipeId, ingredient.amount, ingredient.unit, ingredient.ingredient]);
+  }
+
+  Future<void> updatePersonToRecipe(int recipeId, Person person) async {
+    Database db = await getDatabase();
+
+    await db.rawInsert(
+        "INSERT INTO Recipe_To_Person (recipe_id, person_id) VALUES (?, ?);",
+        [recipeId, person.id]);
+  }
+
   Future<int> updatePerson(Person person) async {
     Database db = await getDatabase();
 
     return await db.rawUpdate(
         "UPDATE Person SET first_name = ?, middle_name = ?, last_name = ? WHERE id = ?",
         [person.firstName, person.middleName, person.lastName, person.id]);
+  }
+
+  Future<void> setUser(Person person) async {
+    Database db = await getDatabase();
+
+    int id = await addPerson(person);
+
+    person.id = id;
+
+    await db.rawInsert("INSERT INTO User (person_id) VALUES (?)", [person.id]);
   }
 
   Future<int> updateFamilyRelation(FamilyRelation familyRelation) async {

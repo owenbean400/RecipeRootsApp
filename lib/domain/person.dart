@@ -1,8 +1,8 @@
 class Person {
   int? id;
-  final String firstName;
-  final String middleName;
-  final String lastName;
+  String firstName;
+  String middleName;
+  String lastName;
 
   Person(
       {this.id,

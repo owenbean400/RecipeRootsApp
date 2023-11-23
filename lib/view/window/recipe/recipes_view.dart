@@ -21,10 +21,11 @@ class RecipeViewsState extends State<RecipeViews> {
   Future<List<Recipe>> recipes =
       RecipeService().getRecipes("", true, false, false, false, false);
 
-  goToRecipePage(int? recipeId) {
-    if (recipeId != null) {
-      EntireRecipe entireRecipe = RecipeService().getRecipe(recipeId);
-      widget.recipeViewAction(entireRecipe);
+  goToRecipePage(Recipe recipeId) {
+    if (recipeId.id != null) {
+      RecipeService()
+          .getRecipe(recipeId)
+          .then((entireRecipe) => widget.recipeViewAction(entireRecipe));
     }
   }
 
@@ -59,12 +60,11 @@ class RecipeViewsState extends State<RecipeViews> {
                 for (int i = 0; i < snapshot.data!.length; i++) {
                   recipeTitles.add(RecipeTile(
                       title: snapshot.data![i].title,
-                      personName:
-                          "${snapshot.data![i].person.firstName} ${snapshot.data![i].person.lastName}",
+                      personName: "",
                       description: snapshot.data![i].desc,
-                      familyRelation: snapshot.data![i].familyRelation,
+                      familyRelation: "",
                       onTapRecipe: (value) {
-                        goToRecipePage(snapshot.data![i].id);
+                        goToRecipePage(snapshot.data![i]);
                       },
                       isBottomBorder: i != snapshot.data!.length - 1));
                 }

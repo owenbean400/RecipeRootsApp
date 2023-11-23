@@ -2,17 +2,23 @@ import 'package:recipe_roots/domain/person.dart';
 
 class Recipe {
   int? id;
-  final String title;
-  final Person person;
-  final String? familyRelation;
-  final String desc;
-  final String? imagePlace;
+  String title;
+  List<Person> people;
+  String desc;
+  String? imagePlace;
 
   Recipe(
       {required this.title,
-      required this.person,
+      required this.people,
       required this.desc,
-      this.familyRelation,
       this.imagePlace,
       this.id});
+
+  factory Recipe.fromSQL(Map<String, Object?> sqlMap) {
+    return Recipe(
+        id: sqlMap["id"] as int,
+        title: sqlMap["name"] as String,
+        desc: sqlMap["description"] as String,
+        people: []);
+  }
 }

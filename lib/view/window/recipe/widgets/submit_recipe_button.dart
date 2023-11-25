@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
@@ -12,7 +10,6 @@ class SubmitRecipeFormButton extends StatelessWidget {
   const SubmitRecipeFormButton({super.key, required this.goToRecipeViews});
 
   saveRecipe(EntireRecipe recipe) {
-    log("Saved!");
     if (recipe.recipe.id == null) {
       RecipeService().addRecipe(recipe).then((value) => goToRecipeViews());
     } else {
@@ -25,7 +22,6 @@ class SubmitRecipeFormButton extends StatelessWidget {
     return Consumer<EntireRecipeForm>(builder: ((context, recipeForm, child) {
       return ElevatedButton(
         onPressed: () {
-          log("Clicked!");
           saveRecipe(recipeForm.getRecipe());
         },
         style: Theme.of(context).elevatedButtonTheme.style,

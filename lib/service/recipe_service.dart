@@ -12,40 +12,60 @@ class RecipeService {
       bool searchDescription,
       bool searchPeople,
       bool searchFamilyRelation,
-      bool searchIngredients) async {
+      bool searchIngredients,
+      Person user) async {
+    List<Recipe> recipes = [];
+
     if (search == "") {
-      return await RecipeRootsDAO().getRecipesAll();
+      recipes = await RecipeRootsDAO().getRecipesAll();
     } else if (searchTitle) {
-      return await RecipeRootsDAO().getRecipesBySearchTitle(search);
+      recipes = await RecipeRootsDAO().getRecipesBySearchTitle(search);
     } else if (searchDescription) {
-      return await RecipeRootsDAO().getRecipesBySearchDescription(search);
+      recipes = await RecipeRootsDAO().getRecipesBySearchDescription(search);
     } else if (searchPeople) {
       List<String> names = search.split("");
 
       if (names.length == 1) {
-        return await RecipeRootsDAO().getRecipesBySearchPeopleOneName(names[0]);
+        recipes =
+            await RecipeRootsDAO().getRecipesBySearchPeopleOneName(names[0]);
       } else if (names.length == 2) {
-        return await RecipeRootsDAO()
+        recipes = await RecipeRootsDAO()
             .getRecipesBySearchPeopleTwoName(names[0], names[1]);
       } else {
-        return await RecipeRootsDAO()
+        recipes = await RecipeRootsDAO()
             .getRecipesBySearchPeopleThreeName(names[0], names[1], names[2]);
       }
     } else if (searchFamilyRelation) {
-      return await RecipeRootsDAO().getRecipesBySearchFamilyRelation(search);
+      recipes = await RecipeRootsDAO().getRecipesBySearchFamilyRelation(search);
     } else if (searchIngredients) {
-      return await RecipeRootsDAO().getRecipesBySearchIngredient(search);
+      recipes = await RecipeRootsDAO().getRecipesBySearchIngredient(search);
     }
 
-    return [];
+    for (Recipe recipe in recipes) {
+      if (recipe.id != null) {
+        recipe.people = await RecipeRootsDAO().getAuthorOfRecipe(recipe.id!);
+
+        for (Person person in recipe.people) {
+          person.familyRelation =
+              await RecipeRootsDAO().getFamilyRelation(user, person);
+        }
+      }
+    }
+
+    return recipes;
   }
 
-  Future<EntireRecipe> getRecipe(Recipe recipe) async {
+  Future<EntireRecipe> getRecipe(Recipe recipe, Person user) async {
     List<Ingredient> ingredients =
         await RecipeRootsDAO().getIngredientFromRecipe(recipe.id!);
     List<CookingStep> cookingSteps =
         await RecipeRootsDAO().getCookingSteps(recipe.id!);
     List<Person> authors = await RecipeRootsDAO().getAuthorOfRecipe(recipe.id!);
+
+    for (Person person in authors) {
+      person.familyRelation =
+          await RecipeRootsDAO().getFamilyRelation(user, person);
+    }
 
     return EntireRecipe(
         recipe: recipe,

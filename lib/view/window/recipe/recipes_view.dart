@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/domain/recipe.dart';
+import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/recipe_service.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/recipe_search_bar.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/recipe_tile.dart';
@@ -18,13 +19,13 @@ class RecipeViews extends StatefulWidget {
 }
 
 class RecipeViewsState extends State<RecipeViews> {
-  Future<List<Recipe>> recipes =
-      RecipeService().getRecipes("", true, false, false, false, false);
+  Future<List<Recipe>> recipes = RecipeService().getRecipes(
+      "", true, false, false, false, false, ThePersonSingleton().user!);
 
   goToRecipePage(Recipe recipeId) {
     if (recipeId.id != null) {
       RecipeService()
-          .getRecipe(recipeId)
+          .getRecipe(recipeId, ThePersonSingleton().user!)
           .then((entireRecipe) => widget.recipeViewAction(entireRecipe));
     }
   }
@@ -43,7 +44,8 @@ class RecipeViewsState extends State<RecipeViews> {
           isSearchDescription,
           isSearchPeople,
           isSearchFamilyRelation,
-          isSearchIngredients);
+          isSearchIngredients,
+          ThePersonSingleton().user!);
     });
   }
 
@@ -60,9 +62,14 @@ class RecipeViewsState extends State<RecipeViews> {
                 for (int i = 0; i < snapshot.data!.length; i++) {
                   recipeTitles.add(RecipeTile(
                       title: snapshot.data![i].title,
-                      personName: "",
+                      personName: (snapshot.data![i].people.isNotEmpty)
+                          ? "${snapshot.data![i].people.first.firstName} ${snapshot.data![i].people.first.lastName}"
+                          : "",
                       description: snapshot.data![i].desc,
-                      familyRelation: "",
+                      familyRelation: (snapshot.data![i].people.isNotEmpty)
+                          ? snapshot.data![i].people.first.familyRelation
+                              ?.familyRelation
+                          : null,
                       onTapRecipe: (value) {
                         goToRecipePage(snapshot.data![i]);
                       },

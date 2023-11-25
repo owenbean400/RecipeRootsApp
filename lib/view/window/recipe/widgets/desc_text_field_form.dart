@@ -9,11 +9,13 @@ class RecipeDescTextFieldForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<EntireRecipeForm>(builder: ((context, recipeForm, child) {
-      return PeopleTextField(
-        textFieldController: recipeForm.descRecipeController,
-        isMultipleLine: true,
-        labelText: "Description",
-      );
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: PeopleTextField(
+            textFieldController: recipeForm.descRecipeController,
+            isMultipleLine: true,
+            labelText: "Description",
+          ));
     }));
   }
 }

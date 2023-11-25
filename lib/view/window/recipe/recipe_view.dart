@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
+import 'package:recipe_roots/service/recipe_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/cooking_steps_view.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/ingredients_view.dart';
 
 class RecipeView extends StatelessWidget {
   final EntireRecipe recipe;
-  final Function goToRecipeView;
+  final Function goToRecipeViews;
+  final ValueSetter<EntireRecipe> goEditRecipe;
 
   const RecipeView(
-      {super.key, required this.recipe, required this.goToRecipeView});
+      {super.key,
+      required this.recipe,
+      required this.goToRecipeViews,
+      required this.goEditRecipe});
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +59,15 @@ class RecipeView extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: () {
-                      goToRecipeView();
+                      RecipeService()
+                          .deleteRecipe(recipe)
+                          .then((value) => goToRecipeViews());
                     },
                     child: Text("Delete",
                         style: Theme.of(context).textTheme.bodyMedium)),
                 TextButton(
                     onPressed: () {
-                      goToRecipeView();
+                      goEditRecipe(recipe);
                     },
                     child: Text("Edit",
                         style: Theme.of(context).textTheme.bodyMedium))
@@ -69,7 +76,7 @@ class RecipeView extends StatelessWidget {
           ],
         )),
         HeaderBackspace(
-            title: recipe.recipe.title, backSpaceAction: goToRecipeView),
+            title: recipe.recipe.title, backSpaceAction: goToRecipeViews),
       ],
     );
   }

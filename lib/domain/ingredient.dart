@@ -16,7 +16,10 @@ class Ingredient {
     return Ingredient(
         id: sqlMap["id"] as int,
         amount: sqlMap["amount"] as String,
-        unit: sqlMap["unti"] as String,
-        ingredient: sqlMap["ingredient"] as String);
+        unit: sqlMap["unit"] as String,
+        ingredient: sqlMap["ingredient"] as String,
+        prepMethod: (sqlMap["prep_method"] != null)
+            ? sqlMap["prep_method"] as String
+            : "");
   }
 }

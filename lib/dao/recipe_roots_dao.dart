@@ -14,17 +14,17 @@ class RecipeRootsDAO {
       await db.execute(
           "CREATE TABLE Recipe (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, image TEXT)");
       await db.execute(
-          "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id), FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
+          "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
       await db.execute(
-          "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT, prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id))");
+          "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT, prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
       await db.execute(
           "CREATE TABLE Person (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT)");
       await db.execute(
           "CREATE TABLE Family_Relation (id INTEGER PRIMARY KEY AUTOINCREMENT, from_person_id INTEGER, to_person_id INTEGER, relationship TEXT, FOREIGN KEY (from_person_id) REFERENCES Person (id) ON DELETE CASCADE, FOREIGN KEY (to_person_id) REFERENCES Person (id) ON DELETE CASCADE)");
       await db.execute(
-          "CREATE TABLE Recipe_To_Person (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INTEGER, person_id INTEGER, FOREIGN KEY (recipe_id) REFERENCES Recipe (id), FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE)");
+          "CREATE TABLE Recipe_To_Person (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INTEGER, person_id INTEGER, FOREIGN KEY (recipe_id) REFERENCES Recipe (id) ON DELETE CASCADE, FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE)");
       await db.execute(
-          "CREATE TABLE FAMILY_TREE (id INTEGER PRIMARY KEY AUTOINCREMENT, lparent_id INTEGER, rparent_id INTEGER, person_id INTEGER, FOREIGN KEY (lparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (rparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
+          "CREATE TABLE Family_Tree (id INTEGER PRIMARY KEY AUTOINCREMENT, lparent_id INTEGER, rparent_id INTEGER, person_id INTEGER, FOREIGN KEY (lparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (rparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
       await db.execute(
           "CREATE TABLE User (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
     });
@@ -129,8 +129,8 @@ class RecipeRootsDAO {
     List<Person> authors = [];
 
     List<Map<String, Object?>> sqlMaps = await db.rawQuery(
-        "SELECT Person.id, Person.first_name, Person.middle_name, Person.last_name FROM Recipe, Person, Recipe_To_Person WHERE Recipe.id = ? AND Recipe.id = Recipe_To_Person.recipe_id AND Recipe_To_Person.person_id = Person.id;",
-        []);
+        "SELECT Person.id, Person.first_name, Person.middle_name, Person.last_name FROM Recipe, Person, Recipe_To_Person WHERE Recipe.id = ? AND Recipe.id = Recipe_To_Person.recipe_id AND Recipe_To_Person.person_id = Person.id",
+        [recipeId]);
 
     for (Map<String, Object?> sqlMap in sqlMaps) {
       authors.add(Person.fromSQL(sqlMap));
@@ -267,11 +267,17 @@ class RecipeRootsDAO {
     Database db = await getDatabase();
 
     await db.rawInsert(
-        "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient) VALUES (?, ?, ?, ?)",
-        [recipeId, ingredient.amount, ingredient.unit, ingredient.ingredient]);
+        "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
+        [
+          recipeId,
+          ingredient.amount,
+          ingredient.unit,
+          ingredient.ingredient,
+          ingredient.prepMethod ?? ""
+        ]);
   }
 
-  Future<void> updatePersonToRecipe(int recipeId, Person person) async {
+  Future<void> addPersonToRecipe(int recipeId, Person person) async {
     Database db = await getDatabase();
 
     await db.rawInsert(
@@ -309,6 +315,38 @@ class RecipeRootsDAO {
         ]);
   }
 
+  Future<int> updateIngredientRecipeID(int newRecipeId, int oldRecipeId) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Ingredient SET recipe_id = ? WHERE Ingredient.recipe_id = ?",
+        [newRecipeId, oldRecipeId]);
+  }
+
+  Future<int> updateCookingRecipeID(int newRecipeId, int oldRecipeId) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Cooking_Steps SET recipe_id = ? WHERE Cooking_Steps.recipe_id = ?",
+        [newRecipeId, oldRecipeId]);
+  }
+
+  Future<int> updatePersonRecipeID(int newRecipeId, int oldRecipeId) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Recipe_To_Person SET recipe_id = ? WHERE Recipe_To_Person.recipe_id = ?",
+        [newRecipeId, oldRecipeId]);
+  }
+
+  Future<int> updateRecipe(Recipe recipe) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Recipe SET name = ?, description = ?, image = ?, WHERE Recipe.id = ?",
+        [recipe.title, recipe.desc, recipe.imagePlace, recipe.id]);
+  }
+
   Future<int> deletePerson(Person person) async {
     Database db = await getDatabase();
 
@@ -320,5 +358,33 @@ class RecipeRootsDAO {
 
     return await db.rawDelete(
         "DELETE FROM Family_Relation WHERE id = ?", [familyRelation.id]);
+  }
+
+  Future<int> deleteRecipeIngredientsFromRecipeID(int recipeId) async {
+    Database db = await getDatabase();
+
+    return await db
+        .rawDelete("DELETE FROM Ingredient WHERE recipe_id = ?", [recipeId]);
+  }
+
+  Future<int> deleteRecipeCookingStepsFromRecipeID(int recipeId) async {
+    Database db = await getDatabase();
+
+    return await db
+        .rawDelete("DELETE FROM Cooking_Steps WHERE recipe_id = ?", [recipeId]);
+  }
+
+  Future<int> deletePersonFromRecipe(int recipeId) async {
+    Database db = await getDatabase();
+
+    return await db.rawDelete(
+        "DELETE FROM Recipe_To_Person WHERE recipe_id = ?", [recipeId]);
+  }
+
+  Future<int> deleteRecipe(Recipe recipe) async {
+    Database db = await getDatabase();
+
+    return await db
+        .rawDelete("DELETE FROM Recipe WHERE id = ?", [recipe.id ?? -1]);
   }
 }

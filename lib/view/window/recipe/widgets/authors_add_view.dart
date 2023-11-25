@@ -30,8 +30,9 @@ class AuthorAddState extends State<AuthorAdd> {
           ));
         }
 
-        return SizedBox(
+        return Container(
             width: constraints.maxWidth,
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [

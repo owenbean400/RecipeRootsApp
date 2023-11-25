@@ -9,10 +9,12 @@ class RecipeTitleTextFieldForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<EntireRecipeForm>(builder: ((context, recipeForm, child) {
-      return PeopleTextField(
-        textFieldController: recipeForm.titleRecipeController,
-        labelText: "Recipe Name",
-      );
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: PeopleTextField(
+            textFieldController: recipeForm.titleRecipeController,
+            labelText: "Recipe Name",
+          ));
     }));
   }
 }

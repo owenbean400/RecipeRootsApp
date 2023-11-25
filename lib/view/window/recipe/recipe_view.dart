@@ -54,6 +54,15 @@ class RecipeView extends StatelessWidget {
                   ingredients: recipe.ingredients,
                   fullWidth: constraints.maxWidth);
             }),
+            (recipe.cookingSteps.isNotEmpty)
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: Text(
+                        (recipe.cookingSteps.length == 1)
+                            ? "Cooking Step"
+                            : "Cooking Steps",
+                        style: Theme.of(context).textTheme.bodyMedium))
+                : Container(),
             CookingStepsView(cookingSteps: recipe.cookingSteps),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),

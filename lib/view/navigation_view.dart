@@ -7,7 +7,7 @@ import 'package:recipe_roots/view/window/family_tree/family_tree_add.dart';
 import 'package:recipe_roots/view/window/family_tree/family_tree_view.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
-import 'package:recipe_roots/view/window/recipe/recipe_add.dart';
+import 'package:recipe_roots/view/window/recipe/recipe_edit.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipes_view.dart';
 
@@ -62,6 +62,31 @@ class NavigationBarState extends State<NavigationViewBar> {
     });
   }
 
+  void _addRecipeView() {
+    _widgetOptions[1] = RecipeEdit(goToRecipeViews: _viewRecipesViews);
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
+  void _addFamilyTree(FamilyTree? familyTree) {
+    _widgetOptions[0] = FamilyTreeAdd(
+        familyTree: familyTree, goToViewFamilyTree: _viewFamilyTreeViews);
+    setState(() {
+      _selectedIndex = 0;
+    });
+  }
+
+  void _editRecipeView(EntireRecipe recipe) {
+    _widgetOptions[1] = RecipeEdit(
+      goToRecipeViews: _viewRecipesViews,
+      editRecipe: recipe,
+    );
+    setState(() {
+      _selectedIndex = 1;
+    });
+  }
+
   void _editPersonView(FamilyRelation familyRelation) {
     _widgetOptions[2] = PeopleAdd(
         familyRelation: familyRelation,
@@ -85,7 +110,8 @@ class NavigationBarState extends State<NavigationViewBar> {
   void _viewRecipeViews(EntireRecipe recipe) {
     _widgetOptions[1] = RecipeView(
       recipe: recipe,
-      goToRecipeView: _viewRecipesViews,
+      goToRecipeViews: _viewRecipesViews,
+      goEditRecipe: _editRecipeView,
     );
     setState(() {
       _selectedIndex = 1;
@@ -101,21 +127,6 @@ class NavigationBarState extends State<NavigationViewBar> {
     );
     setState(() {
       _selectedIndex = 1;
-    });
-  }
-
-  void _addRecipeView() {
-    _widgetOptions[1] = RecipeAdd(goToRecipeViews: _viewRecipesViews);
-    setState(() {
-      _selectedIndex = 1;
-    });
-  }
-
-  void _addFamilyTree(FamilyTree? familyTree) {
-    _widgetOptions[0] = FamilyTreeAdd(
-        familyTree: familyTree, goToViewFamilyTree: _viewFamilyTreeViews);
-    setState(() {
-      _selectedIndex = 0;
     });
   }
 

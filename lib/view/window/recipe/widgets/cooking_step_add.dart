@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_roots/view/window/people/people_add.dart';
+import 'package:recipe_roots/view/window/people/widgets/people_text_field.dart';
 
 class CookingStepAdd extends StatelessWidget {
   final TextEditingController textController;
@@ -12,44 +14,31 @@ class CookingStepAdd extends StatelessWidget {
       required this.step,
       required this.isDelete});
 
+  void removeRecord() {
+    isDelete(step);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text("Step ${step + 1}"),
-          InkWell(
-            onTap: () {
-              isDelete(step);
-            },
-            child: const Text(
-              "X",
-              style: TextStyle(
-                  color: Colors.red, fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-          )
-        ]),
-        TextField(
-            controller: textController,
-            cursorColor: Theme.of(context).primaryColor,
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              fillColor: Theme.of(context).hintColor,
-              filled: true,
-              focusColor: Theme.of(context).primaryColorLight,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                borderSide:
-                    BorderSide(color: Theme.of(context).hintColor, width: 2),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                borderSide: BorderSide(color: Theme.of(context).hintColor),
-              ),
-            ))
-      ],
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      margin: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).hintColor),
+      child: Column(children: [
+        PeopleTextField(
+            textFieldController: textController,
+            labelText: "Instruction",
+            barColor: Theme.of(context).primaryColorLight,
+            isMultipleLine: true,
+            height: 180),
+        ElevatedActionButton(
+          buttonText: "Remove Cooking Step",
+          action: removeRecord,
+        ),
+        Text("${step + 1}")
+      ]),
     );
   }
 }

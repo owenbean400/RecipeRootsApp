@@ -1,8 +1,11 @@
+import 'package:recipe_roots/domain/family_relation.dart';
+
 class Person {
   int? id;
   String firstName;
   String middleName;
   String lastName;
+  FamilyRelation? familyRelation;
 
   Person(
       {this.id,

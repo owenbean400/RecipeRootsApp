@@ -75,8 +75,8 @@ class RecipeRootsDAO {
     Database db = await getDatabase();
 
     List<Map<String, Object?>> recipeMaps = await db.rawQuery(
-        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' OR middle_name LIKE '%' || ? || '%' OR last_name LIKE '%' || ? || '%' )",
-        [name]);
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id IN (SELECT recipe_id AS id FROM Recipe_To_Person, Person WHERE ((Person.first_name LIKE '%' || ? || '%') OR (middle_name LIKE '%' || ? || '%') OR (last_name LIKE '%' || ? || '%')) AND Person.id = Recipe_To_Person.person_id)",
+        [name, name, name]);
 
     return _sqlMapListToRecipes(recipeMaps);
   }
@@ -86,7 +86,7 @@ class RecipeRootsDAO {
     Database db = await getDatabase();
 
     List<Map<String, Object?>> recipeMaps = await db.rawQuery(
-        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' )",
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id AS id FROM Recipe_To_Person, Person WHERE Person.first_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' AND Person.id = Recipe_To_Person.person_id)",
         [firstName, lastName]);
 
     return _sqlMapListToRecipes(recipeMaps);
@@ -97,7 +97,7 @@ class RecipeRootsDAO {
     Database db = await getDatabase();
 
     List<Map<String, Object?>> recipeMaps = await db.rawQuery(
-        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person, WHERE Person.first_name LIKE '%' || ? || '%' AND middle_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' )",
+        "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person, Person WHERE Person.first_name LIKE '%' || ? || '%' AND middle_name LIKE '%' || ? || '%' AND last_name LIKE '%' || ? || '%' AND Person.id = Recipe_To_Person.person_id)",
         [firstName, lastName, middleName]);
 
     return _sqlMapListToRecipes(recipeMaps);

@@ -54,24 +54,27 @@ class RecipeView extends StatelessWidget {
                   fullWidth: constraints.maxWidth);
             }),
             CookingStepsView(cookingSteps: recipe.cookingSteps),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      RecipeService()
-                          .deleteRecipe(recipe)
-                          .then((value) => goToRecipeViews());
-                    },
-                    child: Text("Delete",
-                        style: Theme.of(context).textTheme.bodyMedium)),
-                TextButton(
-                    onPressed: () {
-                      goEditRecipe(recipe);
-                    },
-                    child: Text("Edit",
-                        style: Theme.of(context).textTheme.bodyMedium))
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        RecipeService()
+                            .deleteRecipe(recipe)
+                            .then((value) => goToRecipeViews());
+                      },
+                      child: Text("Delete",
+                          style: Theme.of(context).textTheme.bodyMedium)),
+                  TextButton(
+                      onPressed: () {
+                        goEditRecipe(recipe);
+                      },
+                      child: Text("Edit",
+                          style: Theme.of(context).textTheme.bodyMedium))
+                ],
+              ),
             )
           ],
         )),

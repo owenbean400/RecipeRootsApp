@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:recipe_roots/dao/recipe_roots_dao.dart';
 import 'package:recipe_roots/domain/cooking_step.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';

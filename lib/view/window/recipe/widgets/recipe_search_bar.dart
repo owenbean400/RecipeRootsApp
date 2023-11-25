@@ -76,7 +76,7 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
     return (Container(
         color: Theme.of(context).primaryColor,
         height: (Platform.isIOS)
-            ? ((showAdvanceMenu) ? 460 : 120)
+            ? ((showAdvanceMenu) ? 460 : 140)
             : ((showAdvanceMenu) ? 440 : 84),
         child: Column(children: [
           Padding(

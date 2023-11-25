@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_roots/domain/selection_search_bar_form.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/advance_recipe_search_checkbox.dart';
 
 class RecipeSearchBar extends StatefulWidget {
@@ -16,60 +18,7 @@ class RecipeSearchBar extends StatefulWidget {
 }
 
 class RecipeSearchBarState extends State<RecipeSearchBar> {
-  late TextEditingController _searchController;
   bool showAdvanceMenu = false;
-
-  bool isSearchTitle = true;
-  bool isSearchDescription = false;
-  bool isSearchPeople = false;
-  bool isSearchFamilyRelation = false;
-  bool isSearchIngredients = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController = TextEditingController();
-  }
-
-  void searchForRecipes() {
-    widget.searchForRecipes(
-        _searchController.text,
-        isSearchTitle,
-        isSearchDescription,
-        isSearchPeople,
-        isSearchFamilyRelation,
-        isSearchIngredients);
-  }
-
-  void setSearchTitle(bool isChecked) {
-    setState(() {
-      isSearchTitle = isChecked;
-    });
-  }
-
-  void setSearchDescription(bool isChecked) {
-    setState(() {
-      isSearchDescription = isChecked;
-    });
-  }
-
-  void setSearchPeople(bool isChecked) {
-    setState(() {
-      isSearchPeople = isChecked;
-    });
-  }
-
-  void setSearchFamilyRelation(bool isChecked) {
-    setState(() {
-      isSearchFamilyRelation = isChecked;
-    });
-  }
-
-  void setSearchIngredients(bool isChecked) {
-    setState(() {
-      isSearchIngredients = isChecked;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,39 +34,51 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                   : const EdgeInsets.all(8),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                InkWell(
-                  onTap: () {
-                    searchForRecipes();
-                  },
-                  child: const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: SizedBox(
-                        height: 64,
-                        width: 64,
-                        child: Icon(
-                          Icons.search_rounded,
-                          size: 32,
-                        ),
-                      )),
-                ),
+                Consumer<SelectionSearchBarForm>(
+                    builder: ((context, selectionForm, child) {
+                  return InkWell(
+                    onTap: () {
+                      widget.searchForRecipes(
+                          selectionForm.searchController.text,
+                          selectionForm.isSearchTitle,
+                          selectionForm.isSearchDescription,
+                          selectionForm.isSearchPeople,
+                          selectionForm.isSearchFamilyRelation,
+                          selectionForm.isSearchIngredients);
+                    },
+                    child: const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: SizedBox(
+                          height: 64,
+                          width: 64,
+                          child: Icon(
+                            Icons.search_rounded,
+                            size: 32,
+                          ),
+                        )),
+                  );
+                })),
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      filled: true,
-                      focusColor: Colors.black,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        borderSide: BorderSide(color: Colors.white, width: 2),
+                  child: Consumer<SelectionSearchBarForm>(
+                      builder: ((context, selectionForm, child) {
+                    return TextField(
+                      controller: selectionForm.searchController,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        fillColor: Colors.white,
+                        filled: true,
+                        focusColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderSide: BorderSide(color: Colors.white, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                  ),
+                    );
+                  })),
                 ),
                 InkWell(
                   onTap: () {
@@ -151,29 +112,7 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                       )),
                 )
               ])),
-          (showAdvanceMenu)
-              ? AdvanceRecipeSearchCheckbox(
-                  startSearchDescriptionChecked: isSearchDescription,
-                  startSearchTitleChecked: isSearchTitle,
-                  startSearchFamilyRelationChecked: isSearchFamilyRelation,
-                  startSearchIngredientsChecked: isSearchIngredients,
-                  startSearchPeopleChecked: isSearchPeople,
-                  setSearchTitleChecked: (value) {
-                    setSearchTitle(value);
-                  },
-                  setSearchDescriptionChecked: (value) {
-                    setSearchDescription(value);
-                  },
-                  setSearchPeopleChecked: (value) {
-                    setSearchPeople(value);
-                  },
-                  setSearchFamilyRelationChecked: (value) {
-                    setSearchFamilyRelation(value);
-                  },
-                  setSearchIngredientsChecked: (value) {
-                    setSearchIngredients(value);
-                  })
-              : Container(),
+          (showAdvanceMenu) ? const AdvanceRecipeSearchCheckbox() : Container(),
         ])));
   }
 }

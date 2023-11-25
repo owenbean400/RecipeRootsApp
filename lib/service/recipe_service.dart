@@ -23,7 +23,7 @@ class RecipeService {
     } else if (searchDescription) {
       recipes = await RecipeRootsDAO().getRecipesBySearchDescription(search);
     } else if (searchPeople) {
-      List<String> names = search.split("");
+      List<String> names = search.split(" ");
 
       if (names.length == 1) {
         recipes =

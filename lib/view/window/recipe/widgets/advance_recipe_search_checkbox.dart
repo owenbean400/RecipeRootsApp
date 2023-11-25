@@ -1,127 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_roots/domain/selection_search_bar_form.dart';
 
-class AdvanceRecipeSearchCheckbox extends StatefulWidget {
-  final bool startSearchTitleChecked;
-  final bool startSearchDescriptionChecked;
-  final bool startSearchPeopleChecked;
-  final bool startSearchFamilyRelationChecked;
-  final bool startSearchIngredientsChecked;
-  final ValueSetter<bool> setSearchTitleChecked;
-  final ValueSetter<bool> setSearchDescriptionChecked;
-  final ValueSetter<bool> setSearchPeopleChecked;
-  final ValueSetter<bool> setSearchFamilyRelationChecked;
-  final ValueSetter<bool> setSearchIngredientsChecked;
+class AdvanceRecipeSearchCheckbox extends StatelessWidget {
+  const AdvanceRecipeSearchCheckbox({super.key});
 
-  const AdvanceRecipeSearchCheckbox(
-      {required this.startSearchDescriptionChecked,
-      required this.startSearchFamilyRelationChecked,
-      required this.startSearchIngredientsChecked,
-      required this.startSearchPeopleChecked,
-      required this.startSearchTitleChecked,
-      Key? key,
-      required this.setSearchTitleChecked,
-      required this.setSearchDescriptionChecked,
-      required this.setSearchPeopleChecked,
-      required this.setSearchFamilyRelationChecked,
-      required this.setSearchIngredientsChecked})
-      : super(key: key);
-
-  @override
-  AdvanceRecipeSearchCheckboxState createState() =>
-      AdvanceRecipeSearchCheckboxState();
-}
-
-class AdvanceRecipeSearchCheckboxState
-    extends State<AdvanceRecipeSearchCheckbox> {
   @override
   Widget build(BuildContext context) {
     return (SizedBox(
         child: Padding(
       padding: const EdgeInsets.all(4),
-      child: Column(
-        children: [
-          CheckBoxTitle(
-              text: "Search Title",
-              checkBoxChange: widget.setSearchTitleChecked,
-              isAlreadyChecked: widget.startSearchTitleChecked),
-          CheckBoxTitle(
-              text: "Search Description",
-              checkBoxChange: widget.setSearchDescriptionChecked,
-              isAlreadyChecked: widget.startSearchDescriptionChecked),
-          CheckBoxTitle(
-              text: "Search People",
-              checkBoxChange: widget.setSearchPeopleChecked,
-              isAlreadyChecked: widget.startSearchPeopleChecked),
-          CheckBoxTitle(
-              text: "Search Family Relation",
-              checkBoxChange: widget.setSearchFamilyRelationChecked,
-              isAlreadyChecked: widget.startSearchFamilyRelationChecked),
-          CheckBoxTitle(
-              text: "Search Ingredients",
-              checkBoxChange: widget.setSearchIngredientsChecked,
-              isAlreadyChecked: widget.startSearchIngredientsChecked)
-        ],
-      ),
+      child: Consumer<SelectionSearchBarForm>(
+          builder: ((context, selectionForm, child) {
+        return Column(
+          children: [
+            CheckBoxTitle(
+                text: "Search Title",
+                checkboxClicked: selectionForm.setSearchTitle,
+                checked: selectionForm.isSearchTitle),
+            CheckBoxTitle(
+                text: "Search Description",
+                checkboxClicked: selectionForm.setSearchDescription,
+                checked: selectionForm.isSearchDescription),
+            CheckBoxTitle(
+                text: "Search People",
+                checkboxClicked: selectionForm.setSearchPeople,
+                checked: selectionForm.isSearchPeople),
+            CheckBoxTitle(
+                text: "Search Family Relation",
+                checkboxClicked: selectionForm.setSearchFamilyRelation,
+                checked: selectionForm.isSearchFamilyRelation),
+            CheckBoxTitle(
+                text: "Search Ingredients",
+                checkboxClicked: selectionForm.setSearchIngredients,
+                checked: selectionForm.isSearchIngredients)
+          ],
+        );
+      })),
     )));
   }
 }
 
-class CheckBoxTitle extends StatefulWidget {
+class CheckBoxTitle extends StatelessWidget {
+  final Function checkboxClicked;
+  final bool checked;
   final String text;
-  final ValueSetter<bool> checkBoxChange;
-  final bool isAlreadyChecked;
 
   const CheckBoxTitle(
-      {required this.isAlreadyChecked,
+      {required this.checked,
+      Key? key,
       required this.text,
-      required this.checkBoxChange,
-      Key? key})
+      required this.checkboxClicked})
       : super(key: key);
 
   @override
-  CheckBoxTitleState createState() => CheckBoxTitleState();
-}
-
-class CheckBoxTitleState extends State<CheckBoxTitle> {
-  bool? isChecked;
-
-  @override
-  void initState() {
-    setState(() {
-      isChecked = widget.isAlreadyChecked;
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return (SizedBox(
-      height: 64,
-      child: Row(children: [
-        SizedBox(
-          width: 64,
+    return InkWell(
+        onTap: () {
+          checkboxClicked();
+        },
+        child: SizedBox(
           height: 64,
-          child: Checkbox(
-            checkColor: Theme.of(context).primaryColor,
-            activeColor: Colors.black,
-            fillColor: MaterialStateProperty.resolveWith<Color>(
-                (Set<MaterialState> states) {
-              if (states.contains(MaterialState.disabled)) {
-                return Colors.black.withOpacity(.32);
-              }
-              return Colors.black;
-            }),
-            value: isChecked,
-            onChanged: (value) {
-              widget.checkBoxChange(value ?? false);
-              setState(() {
-                isChecked = value!;
-              });
-            },
-          ),
-        ),
-        Text(widget.text, style: Theme.of(context).textTheme.headlineSmall)
-      ]),
-    ));
+          child: Row(children: [
+            SizedBox(
+              width: 64,
+              height: 64,
+              child: Checkbox(
+                checkColor: Theme.of(context).primaryColor,
+                activeColor: Theme.of(context).primaryColorLight,
+                fillColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.disabled)) {
+                    return Theme.of(context).primaryColorLight.withOpacity(0.1);
+                  }
+                  return Theme.of(context).primaryColorLight;
+                }),
+                value: checked,
+                onChanged: (value) {
+                  checkboxClicked();
+                },
+              ),
+            ),
+            Text(text, style: Theme.of(context).textTheme.headlineSmall)
+          ]),
+        ));
   }
 }

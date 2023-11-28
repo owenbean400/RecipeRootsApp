@@ -21,7 +21,7 @@ class HeaderAddWithSecondAction extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         return Container(
           padding: (Platform.isIOS)
-              ? const EdgeInsets.fromLTRB(16, 48, 0, 16)
+              ? const EdgeInsets.fromLTRB(16, 56, 0, 16)
               : const EdgeInsets.fromLTRB(16, 16, 0, 16),
           width: constraints.maxWidth,
           color: Theme.of(context).primaryColor,

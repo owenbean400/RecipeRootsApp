@@ -4,6 +4,7 @@ import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_add.dart';
 import 'package:recipe_roots/view/window/people/widgets/family_relation_list.dart';
+import 'package:recipe_roots/view/window/people/widgets/people_tile_header.dart';
 
 class PeopleView extends StatefulWidget {
   final Function setPeopleNavAddFunction;
@@ -32,7 +33,9 @@ class PeopleViewState extends State<PeopleView> {
         future: familyRelations,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<FamilyRelationTile> familyRelationsList = [];
+            List<Widget> familyRelationsList = [];
+
+            familyRelationsList.add(const FamilyRelationTileHeader());
 
             for (int i = 0; i < snapshot.data!.length; i++) {
               familyRelationsList.add(FamilyRelationTile(

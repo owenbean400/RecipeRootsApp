@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:recipe_roots/domain/child_to_parent.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
-import 'package:recipe_roots/domain/family_tree.dart';
 import 'package:recipe_roots/view/window/default.dart';
 import 'package:recipe_roots/view/window/family_tree/family_tree_add.dart';
 import 'package:recipe_roots/view/window/family_tree/family_tree_view.dart';
+import 'package:recipe_roots/view/window/family_tree/family_tree_view_list.dart';
 import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/people/people_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_edit.dart';
@@ -20,11 +21,13 @@ class NavigationViewBar extends StatefulWidget {
 
 class NavigationBarState extends State<NavigationViewBar> {
   int _selectedIndex = 1;
+  int _selectedChildParentIndex = 0;
 
   NavigationBarState() {
     _widgetOptions = <Widget>[
       FamilyTreeView(
         setAddFamilyTree: _addFamilyTree,
+        goToChildToParentList: _viewFamilyTreeViews,
       ),
       RecipeViews(
         goToRecipeAdd: _addRecipeView,
@@ -69,9 +72,12 @@ class NavigationBarState extends State<NavigationViewBar> {
     });
   }
 
-  void _addFamilyTree(FamilyTree? familyTree) {
-    _widgetOptions[0] = FamilyTreeAdd(
-        familyTree: familyTree, goToViewFamilyTree: _viewFamilyTreeViews);
+  void _addFamilyTree(ChildToParent? childToParent) {
+    _widgetOptions[0] = ChildToParentAdd(
+        childToParent: childToParent,
+        goToViewFamilyTree: (_selectedChildParentIndex == 1)
+            ? _viewFamilyTreeList
+            : _viewFamilyTreeViews);
     setState(() {
       _selectedIndex = 0;
     });
@@ -131,8 +137,21 @@ class NavigationBarState extends State<NavigationViewBar> {
   }
 
   void _viewFamilyTreeViews() {
-    _widgetOptions[0] = FamilyTreeView(setAddFamilyTree: _addFamilyTree);
+    _widgetOptions[0] = FamilyTreeView(
+        setAddFamilyTree: _addFamilyTree,
+        goToChildToParentList: _viewFamilyTreeList);
     setState(() {
+      _selectedChildParentIndex = 0;
+      _selectedIndex = 0;
+    });
+  }
+
+  void _viewFamilyTreeList() {
+    _widgetOptions[0] = FamilyTreeViewList(
+        setAddFamilyTree: _addFamilyTree,
+        setTreeGraphView: _viewFamilyTreeViews);
+    setState(() {
+      _selectedChildParentIndex = 1;
       _selectedIndex = 0;
     });
   }

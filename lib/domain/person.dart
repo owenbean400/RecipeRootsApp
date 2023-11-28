@@ -20,4 +20,11 @@ class Person {
         middleName: sqlMap["middle_name"] as String,
         lastName: sqlMap["last_name"] as String);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Person && other.runtimeType == runtimeType && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

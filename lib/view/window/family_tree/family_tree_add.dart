@@ -1,73 +1,138 @@
 import 'package:flutter/material.dart';
-import 'package:recipe_roots/domain/family_tree.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_roots/domain/child_to_parent.dart';
+import 'package:recipe_roots/domain/child_to_parent_form.dart';
 import 'package:recipe_roots/domain/person.dart';
+import 'package:recipe_roots/service/family_service.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
-import 'package:recipe_roots/view/window/people/people_add.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/person_drop_menu.dart';
 
-class FamilyTreeAdd extends StatefulWidget {
-  final FamilyTree? familyTree;
+class ChildToParentAdd extends StatefulWidget {
+  final ChildToParent? childToParent;
   final Function goToViewFamilyTree;
 
-  const FamilyTreeAdd(
-      {super.key, this.familyTree, required this.goToViewFamilyTree});
+  const ChildToParentAdd(
+      {super.key, this.childToParent, required this.goToViewFamilyTree});
 
   @override
-  FamilyTreeAddState createState() => FamilyTreeAddState();
+  ChildToParentAddState createState() => ChildToParentAddState();
 }
 
-class FamilyTreeAddState extends State<FamilyTreeAdd> {
+class ChildToParentAddState extends State<ChildToParentAdd> {
   final Future<List<Person>> people = PersonService().getAllPeople();
 
-  void saveFamilyTree() {}
+  void update(ChildToParent updatedRecord) {
+    FamilyService()
+        .updateChildToParent(updatedRecord)
+        .then((value) => {widget.goToViewFamilyTree()});
+  }
+
+  void delete(ChildToParent deletedRecord) {
+    FamilyService()
+        .deleteChildToParent(deletedRecord)
+        .then((value) => {widget.goToViewFamilyTree()});
+  }
 
   @override
   Widget build(BuildContext context) {
-    Person? parent1 = widget.familyTree?.parent1?.child;
-    Person? parent2 = widget.familyTree?.parent2?.child;
-
     return FutureBuilder<List<Person>>(
         future: people,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  HeaderBackspace(
-                    backSpaceAction: widget.goToViewFamilyTree,
-                    title: "Family Tree",
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Person:",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          PersonButton(
-                              people: snapshot.data!,
-                              personChosen: widget.familyTree?.child),
-                          Text(
-                            "Parent 1:",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          PersonButton(
-                              people: snapshot.data!, personChosen: parent1),
-                          Text(
-                            "Parent 2:",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          PersonButton(
-                              people: snapshot.data!, personChosen: parent2),
-                          ElevatedActionButton(
-                              action: saveFamilyTree,
-                              buttonText: "Save Family Tree")
-                        ],
-                      ))
-                ]);
+            return ChangeNotifierProvider(
+                create: (context) => (widget.childToParent != null)
+                    ? ChildToParentForm(
+                        childToParentId: widget.childToParent?.id,
+                        child: widget.childToParent?.child,
+                        parent: widget.childToParent?.parent)
+                    : ChildToParentForm(),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HeaderBackspace(
+                        backSpaceAction: widget.goToViewFamilyTree,
+                        title: "Child/Parent",
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Child:",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Consumer<ChildToParentForm>(builder:
+                                  ((context, childToParentForm, child) {
+                                return PersonButton(
+                                    people: snapshot.data!,
+                                    setPerson: (value) {
+                                      childToParentForm.updateChild(value);
+                                    },
+                                    personChosen: childToParentForm.child);
+                              })),
+                              Text(
+                                "Parent:",
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              Consumer<ChildToParentForm>(builder:
+                                  ((context, childToParentForm, child) {
+                                return PersonButton(
+                                    people: snapshot.data!,
+                                    setPerson: (value) {
+                                      childToParentForm.updateParent(value);
+                                    },
+                                    personChosen: childToParentForm.parent);
+                              })),
+                              Consumer<ChildToParentForm>(builder:
+                                  ((context, childToParentForm, child) {
+                                if (childToParentForm.child != null &&
+                                    childToParentForm.parent != null) {
+                                  return ElevatedButton(
+                                    onPressed: () {
+                                      update(
+                                          childToParentForm.getChildToParent());
+                                    },
+                                    style: Theme.of(context)
+                                        .elevatedButtonTheme
+                                        .style,
+                                    child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            8, 0, 8, 0),
+                                        child: Text(
+                                          "Save Child -> Parent",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                        )),
+                                  );
+                                }
+
+                                return Container();
+                              })),
+                              (widget.childToParent?.id != null)
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        delete(widget.childToParent!);
+                                      },
+                                      style: Theme.of(context)
+                                          .elevatedButtonTheme
+                                          .style,
+                                      child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              8, 0, 8, 0),
+                                          child: Text(
+                                            "Delete Child To Parent",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium,
+                                          )),
+                                    )
+                                  : Container(),
+                            ],
+                          ))
+                    ]));
           }
           return HeaderBackspace(
               backSpaceAction: widget.goToViewFamilyTree, title: "Family Tree");

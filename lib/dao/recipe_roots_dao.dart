@@ -1,3 +1,4 @@
+import 'package:recipe_roots/domain/child_to_parent.dart';
 import 'package:recipe_roots/domain/cooking_step.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/ingredient.dart';
@@ -24,7 +25,7 @@ class RecipeRootsDAO {
       await db.execute(
           "CREATE TABLE Recipe_To_Person (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INTEGER, person_id INTEGER, FOREIGN KEY (recipe_id) REFERENCES Recipe (id) ON DELETE CASCADE, FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE)");
       await db.execute(
-          "CREATE TABLE Family_Tree (id INTEGER PRIMARY KEY AUTOINCREMENT, lparent_id INTEGER, rparent_id INTEGER, person_id INTEGER, FOREIGN KEY (lparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (rparent_id) REFERENCES Person(id) ON DELETE SET NULL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
+          "CREATE TABLE Child_To_Parent (id INTEGER PRIMARY KEY AUTOINCREMENT, child_id INTEGER, parent_id INTEGER, FOREIGN KEY (child_id) REFERENCES Person(id) ON DELETE CASCADE, FOREIGN KEY (parent_id) REFERENCES Person(id) ON DELETE CASCADE)");
       await db.execute(
           "CREATE TABLE User (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
     });
@@ -216,6 +217,77 @@ class RecipeRootsDAO {
     return cookingSteps;
   }
 
+  Future<Person?> getPersonFromId(int personId) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT id, first_name, middle_name, last_name FROM Person WHERE Person.id = ?",
+        [personId]);
+
+    if (sqlMaps.length == 1) {
+      return Person.fromSQL(sqlMaps[0]);
+    }
+    return null;
+  }
+
+  Future<List<List<int>>> getAllChildToParent() async {
+    List<List<int>> allChildToParent = [];
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT DISTINCT Child_To_Parent.id as id, Child.id as child_id, Parent.id as parent_id FROM Child_To_Parent, Person as Child, Person as Parent WHERE Child_To_Parent.child_id = Child.id AND Child_To_Parent.parent_id = Parent.id");
+
+    for (Map<String, Object?> sqlMap in sqlMaps) {
+      allChildToParent.add([
+        sqlMap["id"] as int,
+        sqlMap["child_id"] as int,
+        sqlMap["parent_id"] as int
+      ]);
+    }
+
+    return allChildToParent;
+  }
+
+  Future<List<List<int>>> getChildrenToParentFromChildPersonIDs(
+      int personId) async {
+    List<List<int>> childParentIds = [];
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT Child_To_Parent.id as id, Child.id as child_id, Parent.id as parent_id FROM Child_To_Parent, Person as Child, Person as Parent WHERE Child_To_Parent.child_id = Child.id AND Child_To_Parent.parent_id = Parent.id AND Child.id = ?",
+        [personId]);
+
+    for (Map<String, Object?> sqlMap in sqlMaps) {
+      childParentIds.add([
+        sqlMap["id"] as int,
+        sqlMap["child_id"] as int,
+        sqlMap["parent_id"] as int
+      ]);
+    }
+
+    return childParentIds;
+  }
+
+  Future<List<List<int>>> getChildrenToParentFromParentPersonIDs(
+      int personId) async {
+    List<List<int>> childParentIds = [];
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+        "SELECT Child_To_Parent.id as id, Child.id as child_id, Parent.id as parent_id FROM Child_To_Parent, Person as Child, Person as Parent WHERE Child_To_Parent.child_id = Child.id AND Child_To_Parent.parent_id = Parent.id AND parent.id = ?",
+        [personId]);
+
+    for (Map<String, Object?> sqlMap in sqlMaps) {
+      childParentIds.add([
+        sqlMap["id"] as int,
+        sqlMap["child_id"] as int,
+        sqlMap["parent_id"] as int
+      ]);
+    }
+
+    return childParentIds;
+  }
+
   Future<int> addPerson(Person add) async {
     Database db = await getDatabase();
 
@@ -285,6 +357,14 @@ class RecipeRootsDAO {
         [recipeId, person.id]);
   }
 
+  Future<void> addChildToParent(ChildToParent childToParent) async {
+    Database db = await getDatabase();
+
+    await db.rawInsert(
+        "INSERT INTO Child_To_Parent (child_id, parent_id) VALUEs (?, ?)",
+        [childToParent.child.id, childToParent.parent.id]);
+  }
+
   Future<int> updatePerson(Person person) async {
     Database db = await getDatabase();
 
@@ -347,6 +427,14 @@ class RecipeRootsDAO {
         [recipe.title, recipe.desc, recipe.imagePlace, recipe.id]);
   }
 
+  Future<int> updateChildToPerson(ChildToParent childToParent) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Child_To_Parent SET child_id = ?, parent_id = ? WHERE id = ?",
+        [childToParent.child.id, childToParent.parent.id, childToParent.id]);
+  }
+
   Future<int> deletePerson(Person person) async {
     Database db = await getDatabase();
 
@@ -386,5 +474,12 @@ class RecipeRootsDAO {
 
     return await db
         .rawDelete("DELETE FROM Recipe WHERE id = ?", [recipe.id ?? -1]);
+  }
+
+  Future<int> deleteChildToParent(ChildToParent childToParent) async {
+    Database db = await getDatabase();
+
+    return await db.rawDelete(
+        "DELETE FROM Child_To_Parent WHERE id = ?", [childToParent.id ?? -1]);
   }
 }

@@ -30,7 +30,7 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
         child: Column(children: [
           Padding(
               padding: (Platform.isIOS)
-                  ? const EdgeInsets.fromLTRB(8, 44, 8, 8)
+                  ? const EdgeInsets.fromLTRB(8, 58, 8, 8)
                   : const EdgeInsets.all(8),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [

@@ -50,6 +50,9 @@ jobs:
       - name: Download packages
         run: flutter pub get
 
+      - name: Apply icon to android app
+        run: flutter pub run flutter_launcher_icons
+
       - name: Build Android App Bundle
         run: flutter build appbundle --release
         env:
@@ -78,16 +81,19 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.ref }}
+
       - name: Setup ruby for Fastlane
         uses: ruby/setup-ruby@v1.138.0
         with:
           ruby-version: 3.2.1
           bundler-cache: true
           working-directory: 'ios'
+
       - name: Run Flutter tasks
         uses: subosito/flutter-action@v1
         with:
           channel: "stable"
+
       - name: Bump Flutter version number
         uses: maierj/fastlane-action@v3.0.0
         with:
@@ -98,9 +104,19 @@ jobs:
           APPLE_API_KEY: '${{ secrets.APPLE_API_KEY }}'
           APPLE_API_KEY_ID: '${{ secrets.APPLE_API_KEY_ID }}'
           APPLE_API_ISSUER_ID: '${{ secrets.APPLE_API_ISSUER_ID }}'
-      - run: flutter clean
-      - run: flutter pub get
-      - run: flutter build ios --release --no-codesign
+
+      - name: Clean up flutter
+        run: flutter clean
+
+      - name: Get flutter dependency
+        run: flutter pub get
+
+      - name: Apply icon to iOS app
+        run: flutter pub run flutter_launcher_icons
+
+      - name: Build iOS app
+        run: flutter build ios --release --no-codesign
+
       - name: Deploy iOS Beta to TestFlight via Fastlane
         uses: maierj/fastlane-action@v3.0.0
         with:

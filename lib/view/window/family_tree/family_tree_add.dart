@@ -101,7 +101,7 @@ class ChildToParentAddState extends State<ChildToParentAdd> {
                                         padding: const EdgeInsets.fromLTRB(
                                             8, 0, 8, 0),
                                         child: Text(
-                                          "Save Child -> Parent",
+                                          "Save child to parent",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyMedium,

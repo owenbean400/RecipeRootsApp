@@ -21,7 +21,7 @@ class ChildToParentForm extends ChangeNotifier {
 
   ChildToParent getChildToParent() {
     if (child != null && parent != null) {
-      return ChildToParent(child: child!, parent: parent!);
+      return ChildToParent(id: childToParentId, child: child!, parent: parent!);
     }
 
     throw Error();

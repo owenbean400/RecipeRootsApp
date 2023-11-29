@@ -423,7 +423,7 @@ class RecipeRootsDAO {
     Database db = await getDatabase();
 
     return await db.rawUpdate(
-        "UPDATE Recipe SET name = ?, description = ?, image = ?, WHERE Recipe.id = ?",
+        "UPDATE Recipe SET name = ?, description = ?, image = ? WHERE Recipe.id = ?",
         [recipe.title, recipe.desc, recipe.imagePlace, recipe.id]);
   }
 

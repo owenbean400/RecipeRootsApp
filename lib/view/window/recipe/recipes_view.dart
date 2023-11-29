@@ -84,7 +84,7 @@ class RecipeViewsState extends State<RecipeViews> {
                         child: Padding(
                             padding: (Platform.isIOS)
                                 ? const EdgeInsets.fromLTRB(0, 140, 0, 0)
-                                : const EdgeInsets.fromLTRB(0, 84, 0, 0),
+                                : const EdgeInsets.fromLTRB(0, 100, 0, 0),
                             child: Column(
                               children: recipeTitles,
                             )));

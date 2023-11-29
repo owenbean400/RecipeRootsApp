@@ -110,7 +110,7 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Text(
-                                    "${familyNode.firstName[0]}${familyNode.lastName[0]}"));
+                                    "${(familyNode.firstName.isNotEmpty) ? familyNode.firstName[0] : ""}${(familyNode.lastName.isNotEmpty) ? familyNode.lastName[0] : ""}"));
                           })));
             }
             return Container();

@@ -31,6 +31,9 @@ class PeopleTextField extends StatelessWidget {
             SizedBox(
               height: height,
               child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   expands: height != null,
                   style: Theme.of(context).textTheme.bodyMedium,
                   readOnly: isDisabled ?? false,

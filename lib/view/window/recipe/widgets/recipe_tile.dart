@@ -7,6 +7,7 @@ class RecipeTile extends StatelessWidget {
   final String? familyRelation;
   final bool? isBottomBorder;
   final String description;
+  final String? imagePath;
   final ValueSetter<int?> onTapRecipe;
 
   const RecipeTile(
@@ -17,7 +18,8 @@ class RecipeTile extends StatelessWidget {
       required this.description,
       this.id,
       required this.onTapRecipe,
-      this.isBottomBorder});
+      this.isBottomBorder,
+      this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,9 @@ class RecipeTile extends StatelessWidget {
                   children: [
                     SizedBox(
                       height: 128,
-                      width: MediaQuery.of(context).size.width - 140,
+                      width: (imagePath != null)
+                          ? MediaQuery.of(context).size.width - 140
+                          : MediaQuery.of(context).size.width - 16,
                       child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Column(
@@ -76,13 +80,15 @@ class RecipeTile extends StatelessWidget {
                             ],
                           )),
                     ),
-                    Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                        child: Container(
-                          width: 128,
-                          height: 128,
-                          color: Colors.grey,
-                        ))
+                    (imagePath != null)
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                            child: Container(
+                              width: 128,
+                              height: 128,
+                              color: Colors.grey,
+                            ))
+                        : Container()
                   ]),
             )));
   }

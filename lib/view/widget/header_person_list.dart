@@ -22,7 +22,7 @@ class HeaderAddWithSecondAction extends StatelessWidget {
         return Container(
           padding: (Platform.isIOS)
               ? const EdgeInsets.fromLTRB(16, 56, 0, 16)
-              : const EdgeInsets.fromLTRB(16, 16, 0, 16),
+              : const EdgeInsets.fromLTRB(16, 32, 0, 16),
           width: constraints.maxWidth,
           color: Theme.of(context).primaryColor,
           child: Row(

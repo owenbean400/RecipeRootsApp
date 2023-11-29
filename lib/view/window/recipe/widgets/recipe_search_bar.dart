@@ -26,12 +26,12 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
         color: Theme.of(context).primaryColor,
         height: (Platform.isIOS)
             ? ((showAdvanceMenu) ? 460 : 140)
-            : ((showAdvanceMenu) ? 440 : 84),
+            : ((showAdvanceMenu) ? 440 : 108),
         child: Column(children: [
           Padding(
               padding: (Platform.isIOS)
                   ? const EdgeInsets.fromLTRB(8, 58, 8, 8)
-                  : const EdgeInsets.all(8),
+                  : const EdgeInsets.fromLTRB(8, 32, 8, 8),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Consumer<SelectionSearchBarForm>(
@@ -63,6 +63,7 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
                       builder: ((context, selectionForm, child) {
                     return TextField(
                       controller: selectionForm.searchController,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         fillColor: Colors.white,

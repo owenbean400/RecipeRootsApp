@@ -56,31 +56,33 @@ class RecipeEditState extends State<RecipeEdit> {
                         child: Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                             child: SingleChildScrollView(
+                                keyboardDismissBehavior:
+                                    ScrollViewKeyboardDismissBehavior.onDrag,
                                 child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const RecipeTitleTextFieldForm(),
-                                const RecipeDescTextFieldForm(),
-                                AuthorAdd(
-                                  people: snapshot.data!,
-                                ),
-                                const IngredientsAdd(),
-                                const CookingStepsAdd(),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      SubmitRecipeFormButton(
-                                          goToRecipeViews:
-                                              widget.goToRecipeViews)
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ))))
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const RecipeTitleTextFieldForm(),
+                                    const RecipeDescTextFieldForm(),
+                                    AuthorAdd(
+                                      people: snapshot.data!,
+                                    ),
+                                    const IngredientsAdd(),
+                                    const CookingStepsAdd(),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          16, 16, 16, 24),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          SubmitRecipeFormButton(
+                                              goToRecipeViews:
+                                                  widget.goToRecipeViews)
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ))))
                   ],
                 ));
           } else if (snapshot.hasError) {

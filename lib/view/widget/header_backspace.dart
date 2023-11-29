@@ -16,7 +16,7 @@ class HeaderBackspace extends StatelessWidget {
         return Container(
           padding: (Platform.isIOS)
               ? const EdgeInsets.fromLTRB(16, 56, 0, 16)
-              : const EdgeInsets.fromLTRB(16, 16, 0, 16),
+              : const EdgeInsets.fromLTRB(16, 32, 0, 16),
           width: constraints.maxWidth,
           color: Theme.of(context).primaryColor,
           child: Row(
@@ -31,7 +31,11 @@ class HeaderBackspace extends StatelessWidget {
                   child: const Icon(Icons.arrow_back_ios_new_sharp),
                 ),
               ),
-              Text(title, style: Theme.of(context).textTheme.bodyLarge),
+              Expanded(
+                  child: Text(title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.bodyLarge)),
             ],
           ),
         );

@@ -23,7 +23,11 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icons/reciperoots.png"
+  adaptive_icon_background: "#77ddaa"
+  adaptive_icon_foreground: "assets/icons/reciperoots_alpha.png"
+  image_path_android: "assets/icons/reciperoots_alpha.png"
+  image_path_ios: "assets/icons/reciperoots.png"
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true

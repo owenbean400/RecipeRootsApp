@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_roots/domain/selection_search_bar_form.dart';
@@ -24,14 +22,13 @@ class RecipeSearchBarState extends State<RecipeSearchBar> {
   Widget build(BuildContext context) {
     return (Container(
         color: Theme.of(context).primaryColor,
-        height: (Platform.isIOS)
-            ? ((showAdvanceMenu) ? 460 : 140)
-            : ((showAdvanceMenu) ? 440 : 108),
+        height: (showAdvanceMenu)
+            ? MediaQuery.of(context).viewPadding.top + 430
+            : MediaQuery.of(context).viewPadding.top + 100,
         child: Column(children: [
           Padding(
-              padding: (Platform.isIOS)
-                  ? const EdgeInsets.fromLTRB(8, 58, 8, 8)
-                  : const EdgeInsets.fromLTRB(8, 32, 8, 8),
+              padding: EdgeInsets.fromLTRB(
+                  16, MediaQuery.of(context).viewPadding.top + 16, 0, 16),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Consumer<SelectionSearchBarForm>(

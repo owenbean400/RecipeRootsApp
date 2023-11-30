@@ -82,7 +82,7 @@ class RecipeViewsState extends State<RecipeViews> {
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(
                                 0,
-                                MediaQuery.of(context).viewPadding.top + 116,
+                                MediaQuery.of(context).viewPadding.top + 108,
                                 0,
                                 16),
                             child: Column(

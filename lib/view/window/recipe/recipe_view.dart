@@ -27,7 +27,7 @@ class RecipeView extends StatelessWidget {
           children: [
             Padding(
                 padding: EdgeInsets.fromLTRB(
-                    8, MediaQuery.of(context).viewPadding.top + 32, 8, 0)),
+                    8, MediaQuery.of(context).viewPadding.top + 64, 8, 0)),
             (recipe.authors.isNotEmpty)
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

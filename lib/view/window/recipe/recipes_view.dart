@@ -81,7 +81,7 @@ class RecipeViewsState extends State<RecipeViews> {
                     return SingleChildScrollView(
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(
-                                16,
+                                0,
                                 MediaQuery.of(context).viewPadding.top + 116,
                                 0,
                                 16),

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:recipe_roots/domain/child_to_parent.dart';
 import 'package:recipe_roots/domain/person.dart';
+import 'package:recipe_roots/domain/recipe.dart';
 import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/family_service.dart';
 import 'package:recipe_roots/view/widget/header_person_list.dart';
 import 'package:recipe_roots/service/node_position_service.dart';
+import 'package:recipe_roots/dao/recipe_roots_dao.dart';
+import 'package:recipe_roots/view/navigation_view.dart';
 
 class FamilyTreeView extends StatefulWidget {
   final ValueSetter<ChildToParent?> setAddFamilyTree;
@@ -73,6 +76,20 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
       await NodePositionService().savePosition(node);
     }
   }
+
+  Future<void> onNodeTap(Person person) async {
+    print('Node tapped: ${person.id}');
+    int id = person.id ?? 0;
+    List<Recipe> recipesByPerson = await RecipeRootsDAO().getRecipesByPerson(id);
+
+    // Check if the widget is still in the tree
+    if (!mounted) return;
+
+    // Access the NavigationViewBarState and update it
+    navigationBarKey.currentState?.updateRecipeView(recipesByPerson);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -143,14 +160,17 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
                       ..style = PaintingStyle.stroke,
                     builder: (Node node) {
                       Person familyNode = node.key?.value;
-                      return Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          "${(familyNode.firstName.isNotEmpty) ? familyNode.firstName[0] : ""}${(familyNode.lastName.isNotEmpty) ? familyNode.lastName[0] : ""}",
+                      return GestureDetector(
+                        onTap: () => onNodeTap(familyNode),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            "${(familyNode.firstName.isNotEmpty) ? familyNode.firstName[0] : ""}${(familyNode.lastName.isNotEmpty) ? familyNode.lastName[0] : ""}",
+                          ),
                         ),
                       );
                     },

@@ -13,16 +13,31 @@ import 'package:recipe_roots/view/window/recipe/widgets/recipe_tile.dart';
 class RecipeViews extends StatefulWidget {
   final Function goToRecipeAdd;
   final ValueSetter<EntireRecipe> recipeViewAction;
-  const RecipeViews(
-      {super.key, required this.recipeViewAction, required this.goToRecipeAdd});
+  final List<Recipe>? specificRecipes;
+
+  const RecipeViews({
+    Key? key,
+    required this.recipeViewAction,
+    required this.goToRecipeAdd,
+    this.specificRecipes,
+  }) : super(key: key);
 
   @override
   RecipeViewsState createState() => RecipeViewsState();
 }
 
 class RecipeViewsState extends State<RecipeViews> {
-  Future<List<Recipe>> recipes = RecipeService().getRecipes(
-      "", true, false, false, false, false, ThePersonSingleton().user!);
+  Future<List<Recipe>>? recipes;
+
+  @override
+  void initState() {
+    super.initState();
+
+    recipes = widget.specificRecipes != null 
+              ? Future.value(widget.specificRecipes)
+              : RecipeService().getRecipes(
+                  "", true, false, false, false, false, ThePersonSingleton().user!);
+  }
 
   goToRecipePage(Recipe recipeId) {
     if (recipeId.id != null) {

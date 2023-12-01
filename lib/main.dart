@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/view/setup_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  // Initialize SharedPreferences before running the app
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
+
   runApp(const MainApp());
 }
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

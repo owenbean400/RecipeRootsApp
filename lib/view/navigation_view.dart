@@ -11,9 +11,12 @@ import 'package:recipe_roots/view/window/people/people_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_edit.dart';
 import 'package:recipe_roots/view/window/recipe/recipe_view.dart';
 import 'package:recipe_roots/view/window/recipe/recipes_view.dart';
+import 'package:recipe_roots/domain/recipe.dart';
+
+GlobalKey<NavigationBarState> navigationBarKey = GlobalKey<NavigationBarState>();
 
 class NavigationViewBar extends StatefulWidget {
-  const NavigationViewBar({Key? key}) : super(key: key);
+  NavigationViewBar({Key? key}) : super(key: navigationBarKey);
 
   @override
   NavigationBarState createState() => NavigationBarState();
@@ -153,6 +156,20 @@ class NavigationBarState extends State<NavigationViewBar> {
     setState(() {
       _selectedChildParentIndex = 1;
       _selectedIndex = 0;
+    });
+  }
+
+  void updateRecipeView(List<Recipe> recipes) {
+    print("YOOO");
+    _widgetOptions[1] = RecipeViews(
+      goToRecipeAdd: _addRecipeView,
+      recipeViewAction: (value) {
+        _viewRecipeViews(value);
+      },
+      specificRecipes: recipes,
+    );
+    setState(() {
+      _selectedIndex = 1; // Switch to RecipeViews tab
     });
   }
 

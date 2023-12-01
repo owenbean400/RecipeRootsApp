@@ -28,7 +28,7 @@ class SetupUserViewState extends State<SetupUserView> {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!) {
-              return const NavigationViewBar();
+              return NavigationViewBar();
             } else {
               return Scaffold(
                   body: UserAddView(addUser: setPeopleNavViewFunction));

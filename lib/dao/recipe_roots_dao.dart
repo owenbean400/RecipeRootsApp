@@ -125,6 +125,16 @@ class RecipeRootsDAO {
     return _sqlMapListToRecipes(recipeMaps);
   }
 
+  Future<List<Recipe>> getRecipesByPerson(int personId) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> recipeMaps = await db.rawQuery(
+      "SELECT DISTINCT Recipe.id, Recipe.name, Recipe.description FROM Recipe WHERE Recipe.id in (SELECT recipe_id FROM Recipe_To_Person WHERE person_id = ?)",
+      [personId]);
+
+    return _sqlMapListToRecipes(recipeMaps);
+  }
+
   Future<List<Person>> getAuthorOfRecipe(int recipeId) async {
     Database db = await getDatabase();
     List<Person> authors = [];

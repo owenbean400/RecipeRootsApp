@@ -6,7 +6,6 @@ import 'package:recipe_roots/domain/recipe.dart';
 import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/family_service.dart';
 import 'package:recipe_roots/view/widget/header_person_list.dart';
-import 'package:recipe_roots/service/node_position_service.dart';
 import 'package:recipe_roots/dao/recipe_roots_dao.dart';
 import 'package:recipe_roots/view/navigation_view.dart';
 
@@ -37,7 +36,7 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
 
   Future<void> loadNodePosition(Node node) async {
     try {
-      Offset position = await NodePositionService().loadPosition(node);
+      Offset position = await RecipeRootsDAO().getPosition(node.key?.value.id);
       node.x = position.dx;
       node.y = position.dy;
     } catch (e) {
@@ -71,7 +70,7 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
 
   Future<void> saveNodePositions() async {
     for (Node node in nodes) {
-      await NodePositionService().updatePosition(node);
+      await RecipeRootsDAO().updatePosition(node.key?.value.id, node.x, node.y);
     }
   }
 

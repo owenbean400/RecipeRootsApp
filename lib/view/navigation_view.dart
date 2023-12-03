@@ -160,7 +160,6 @@ class NavigationBarState extends State<NavigationViewBar> {
   }
 
   void updateRecipeView(List<Recipe> recipes) {
-    print("YOOO");
     _widgetOptions[1] = RecipeViews(
       goToRecipeAdd: _addRecipeView,
       recipeViewAction: (value) {

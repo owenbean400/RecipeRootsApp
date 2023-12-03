@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/view/setup_user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
-
   runApp(const MainApp());
 }
 

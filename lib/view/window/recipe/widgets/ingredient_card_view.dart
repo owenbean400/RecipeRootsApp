@@ -26,7 +26,7 @@ class IngredentCardView extends StatelessWidget {
                 width: width,
                 color: Theme.of(context).hintColor,
                 child: Text("$amount $unit $ingredient",
-                    maxLines: 2, overflow: TextOverflow.ellipsis)))
+                    maxLines: 2, overflow: TextOverflow.fade)))
         : Padding(
             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
             child: Container(width: width));

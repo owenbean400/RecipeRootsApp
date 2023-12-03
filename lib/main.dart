@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:recipe_roots/view/setup_user.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

@@ -22,10 +22,11 @@ class IngredentCardView extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
             child: Container(
                 padding: const EdgeInsets.all(8),
-                height: 70,
+                height: 64,
                 width: width,
                 color: Theme.of(context).hintColor,
-                child: Text("$amount $unit $ingredient")))
+                child: Text("$amount $unit $ingredient",
+                    overflow: TextOverflow.ellipsis)))
         : Padding(
             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
             child: Container(width: width));

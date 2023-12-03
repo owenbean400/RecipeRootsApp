@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:recipe_roots/domain/child_to_parent.dart';
 import 'package:recipe_roots/domain/cooking_step.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
@@ -5,30 +7,44 @@ import 'package:recipe_roots/domain/ingredient.dart';
 import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/domain/recipe.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:math';
 
 class RecipeRootsDAO {
   final String databaseName = "recipeRoots.db";
 
   Future<Database> getDatabase() async {
-    Database database = await openDatabase(databaseName, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-          "CREATE TABLE Recipe (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, image TEXT)");
-      await db.execute(
-          "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
-      await db.execute(
-          "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT, prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
-      await db.execute(
-          "CREATE TABLE Person (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT)");
-      await db.execute(
-          "CREATE TABLE Family_Relation (id INTEGER PRIMARY KEY AUTOINCREMENT, from_person_id INTEGER, to_person_id INTEGER, relationship TEXT, FOREIGN KEY (from_person_id) REFERENCES Person (id) ON DELETE CASCADE, FOREIGN KEY (to_person_id) REFERENCES Person (id) ON DELETE CASCADE)");
-      await db.execute(
-          "CREATE TABLE Recipe_To_Person (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INTEGER, person_id INTEGER, FOREIGN KEY (recipe_id) REFERENCES Recipe (id) ON DELETE CASCADE, FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE)");
-      await db.execute(
-          "CREATE TABLE Child_To_Parent (id INTEGER PRIMARY KEY AUTOINCREMENT, child_id INTEGER, parent_id INTEGER, FOREIGN KEY (child_id) REFERENCES Person(id) ON DELETE CASCADE, FOREIGN KEY (parent_id) REFERENCES Person(id) ON DELETE CASCADE)");
-      await db.execute(
-          "CREATE TABLE User (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
-    });
+    Database database = await openDatabase(databaseName, version: 5,
+      onCreate: (Database db, int version) async {
+        await db.execute(
+            "CREATE TABLE Recipe (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, image TEXT)");
+        await db.execute(
+            "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
+        await db.execute(
+            "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT, prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
+        await db.execute(
+            "CREATE TABLE Person (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT)");
+        await db.execute(
+            "CREATE TABLE Family_Relation (id INTEGER PRIMARY KEY AUTOINCREMENT, from_person_id INTEGER, to_person_id INTEGER, relationship TEXT, FOREIGN KEY (from_person_id) REFERENCES Person (id) ON DELETE CASCADE, FOREIGN KEY (to_person_id) REFERENCES Person (id) ON DELETE CASCADE)");
+        await db.execute(
+            "CREATE TABLE Recipe_To_Person (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INTEGER, person_id INTEGER, FOREIGN KEY (recipe_id) REFERENCES Recipe (id) ON DELETE CASCADE, FOREIGN KEY (person_id) REFERENCES Person (id) ON DELETE CASCADE)");
+        await db.execute(
+            "CREATE TABLE Child_To_Parent (id INTEGER PRIMARY KEY AUTOINCREMENT, child_id INTEGER, parent_id INTEGER, FOREIGN KEY (child_id) REFERENCES Person(id) ON DELETE CASCADE, FOREIGN KEY (parent_id) REFERENCES Person(id) ON DELETE CASCADE)");
+        await db.execute(
+            "CREATE TABLE User (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
+        await db.execute(
+            "CREATE TABLE Position (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, x REAL, y REAL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
+      },
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
+        if (oldVersion < 5) {
+          var tableExists = Sqflite.firstIntValue(await db.rawQuery(
+              "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='Position'")) ?? 0;
+          if (tableExists == 0) {
+            await db.execute(
+                "CREATE TABLE Position (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, x REAL, y REAL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
+          }        
+        }
+      },
+    );
 
     return database;
   }
@@ -381,6 +397,46 @@ class RecipeRootsDAO {
     return await db.rawUpdate(
         "UPDATE Person SET first_name = ?, middle_name = ?, last_name = ? WHERE id = ?",
         [person.firstName, person.middleName, person.lastName, person.id]);
+  }
+
+  Future<int> setPosition(int id, double x, double y) async {
+    Database db = await getDatabase();
+
+    return await db.rawInsert(
+        "INSERT INTO Position (person_id, x, y) VALUES (?, ?, ?)",
+        [id, x, y]);
+  }
+
+  Future<Offset> getPosition(int id) async {
+    Database db = await getDatabase();
+
+    List<Map<String, Object?>> sqlMaps = await db.rawQuery(
+      "SELECT x, y FROM Position WHERE person_id = ?",
+      [id]);
+
+    double x = 0.0;
+    double y = 0.0;
+
+    if (sqlMaps.isEmpty) {
+      Random random = Random();
+      x = random.nextDouble() * 300;
+      y = random.nextDouble() * 300;
+      setPosition(id, x, y);
+    } else {
+      var sqlMap = sqlMaps.first;
+      x = sqlMap["x"] as double;
+      y = sqlMap["y"] as double;
+    }
+
+    return Offset(x, y);
+  }
+
+  Future<int> updatePosition(int id, double x, double y) async {
+    Database db = await getDatabase();
+
+    return await db.rawUpdate(
+        "UPDATE Position SET x = ?, y = ? WHERE person_id = ?",
+        [x, y, id]);
   }
 
   Future<void> setUser(Person person) async {

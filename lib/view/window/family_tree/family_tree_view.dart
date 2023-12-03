@@ -35,15 +35,13 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
     widget.setAddFamilyTree(null);
   }
 
-  Future<void> loadNodePositions(List<Node> nodes) async {
-    for (Node node in nodes) {
-      try {
-        Offset position = await NodePositionService().loadPosition(node);
-        node.x = position.dx;
-        node.y = position.dy;
-      } catch (e) {
-        //
-      }
+  Future<void> loadNodePosition(Node node) async {
+    try {
+      Offset position = await NodePositionService().loadPosition(node);
+      node.x = position.dx;
+      node.y = position.dy;
+    } catch (e) {
+      //
     }
   }
 
@@ -73,23 +71,18 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
 
   Future<void> saveNodePositions() async {
     for (Node node in nodes) {
-      await NodePositionService().savePosition(node);
+      await NodePositionService().updatePosition(node);
     }
   }
 
   Future<void> onNodeTap(Person person) async {
-    print('Node tapped: ${person.id}');
     int id = person.id ?? 0;
     List<Recipe> recipesByPerson = await RecipeRootsDAO().getRecipesByPerson(id);
 
-    // Check if the widget is still in the tree
     if (!mounted) return;
 
-    // Access the NavigationViewBarState and update it
     navigationBarKey.currentState?.updateRecipeView(recipesByPerson);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,9 +114,8 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
 
               for (Node node in nodes) {
                 graph.addNode(node);
+                loadNodePosition(node);
               }
-
-              loadNodePositions(nodes);
 
               createEdges(nodes, snapshot.data ?? []);
 
@@ -141,9 +133,7 @@ class FamilyTreeViewState extends State<FamilyTreeView> {
                   maxScale: 100.6,
                   onInteractionEnd: (details) async {
                     // Save nodes with a tap of the screen
-                    for (Node node in nodes) {
-                      await NodePositionService().savePosition(node);
-                    }
+                    saveNodePositions();
                   },
                   child: GraphView(
                     graph: graph,

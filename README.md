@@ -1,6 +1,6 @@
 # Recipe Roots
 
-This repository contains the source code for the app recipe_roots, created by Owen Bean, SJ Franklin, and Shea Durgin.
+This repository contains the source code for the app Recipe Roots, created by Owen Bean, SJ Franklin, and Shea Durgin.
 
 ## Table of Contents
 

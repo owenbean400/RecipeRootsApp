@@ -10,6 +10,9 @@ This repository contains the source code for the app recipe_roots, created by Ow
 - [Conclusion](#Conclusion)
 
 ## What is Recipe Roots
+Recipe Roots is your family cookbook that fits in your pocket.  
+It holds records of your relatives recipes while properly attributing them as authors.  
+You are able to construct your family tree to properly showcase your Recipe Roots.  
 
 ## Installation
 Follow the documentation for [Flutter installation](https://docs.flutter.dev/get-started/install)  

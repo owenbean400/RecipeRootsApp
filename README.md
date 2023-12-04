@@ -6,7 +6,7 @@ This repository contains the source code for the iOS and Android mobile app Reci
 
 - [What is Recipe Roots](#What-Is-Recipe-Roots)
 - [Installation](#Installation)
-- [Emulation](#Emulation)
+- [Editing the Code](#Editing-the-Code)
 
 ## What is Recipe Roots
 Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots.
@@ -28,7 +28,9 @@ Execute the following commands
 -  flutter doctor --android-licenses
 
 Restart VSCode  
+
+## Editing the Code
 Navigate to RecipeRootsApp/lib/main.dart  
-Start debugging  
+Press start debugging in the top right start dropdown menu
 The app will launch in the emulator on Android Studio (First run may take a bit of time)  
 While editing the code, you can save the file to instantly update the app on the emulator  

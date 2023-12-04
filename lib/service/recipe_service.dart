@@ -90,43 +90,9 @@ class RecipeService {
 
   Future<void> editRecipe(EntireRecipe entireRecipe) async {
     if (entireRecipe.recipe.id != null) {
-      int newTransfer = -2;
-      int oldTransfer = entireRecipe.recipe.id!;
-
-      try {
-        await RecipeRootsDAO().updateCookingRecipeID(newTransfer, oldTransfer);
-        await RecipeRootsDAO()
-            .updateIngredientRecipeID(newTransfer, oldTransfer);
-        await RecipeRootsDAO().updatePersonRecipeID(newTransfer, oldTransfer);
-
-        await RecipeRootsDAO()
-            .deleteRecipeCookingStepsFromRecipeID(oldTransfer);
-        await RecipeRootsDAO().deleteRecipeIngredientsFromRecipeID(oldTransfer);
-        await RecipeRootsDAO().deletePersonFromRecipe(oldTransfer);
-
-        await RecipeRootsDAO()
-            .addCookingSteps(entireRecipe.cookingSteps, oldTransfer);
-
-        for (Ingredient ingredient in entireRecipe.ingredients) {
-          await RecipeRootsDAO().addIngredients(ingredient, oldTransfer);
-        }
-
-        for (Person person in entireRecipe.authors) {
-          await RecipeRootsDAO().addPersonToRecipe(oldTransfer, person);
-        }
-
-        await RecipeRootsDAO()
-            .deleteRecipeCookingStepsFromRecipeID(newTransfer);
-        await RecipeRootsDAO().deleteRecipeIngredientsFromRecipeID(newTransfer);
-        await RecipeRootsDAO().deletePersonFromRecipe(newTransfer);
-
-        await RecipeRootsDAO().updateRecipe(entireRecipe.recipe);
-      } catch (e) {
-        await RecipeRootsDAO().updateCookingRecipeID(oldTransfer, newTransfer);
-        await RecipeRootsDAO()
-            .updateIngredientRecipeID(oldTransfer, newTransfer);
-        await RecipeRootsDAO().updatePersonRecipeID(oldTransfer, newTransfer);
-      }
+      int id = entireRecipe.recipe.id!;
+      
+      await RecipeRootsDAO().performRecipeEdit(entireRecipe, id);
     } else {
       await addRecipe(entireRecipe);
     }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:recipe_roots/domain/child_to_parent.dart';
 import 'package:recipe_roots/domain/cooking_step.dart';
+import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/domain/family_relation.dart';
 import 'package:recipe_roots/domain/ingredient.dart';
 import 'package:recipe_roots/domain/person.dart';
@@ -346,8 +347,8 @@ class RecipeRootsDAO {
   }
 
   Future<void> addCookingSteps(
-      List<CookingStep> cookingSteps, int recipeId) async {
-    Database db = await getDatabase();
+      List<CookingStep> cookingSteps, int recipeId, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
     int priorId = -1;
 
     for (CookingStep cookingStep in cookingSteps) {
@@ -361,8 +362,8 @@ class RecipeRootsDAO {
     }
   }
 
-  Future<void> addIngredients(Ingredient ingredient, int recipeId) async {
-    Database db = await getDatabase();
+  Future<void> addIngredients(Ingredient ingredient, int recipeId, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     await db.rawInsert(
         "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
@@ -375,8 +376,8 @@ class RecipeRootsDAO {
         ]);
   }
 
-  Future<void> addPersonToRecipe(int recipeId, Person person) async {
-    Database db = await getDatabase();
+  Future<void> addPersonToRecipe(int recipeId, Person person, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     await db.rawInsert(
         "INSERT INTO Recipe_To_Person (recipe_id, person_id) VALUES (?, ?);",
@@ -485,8 +486,8 @@ class RecipeRootsDAO {
         [newRecipeId, oldRecipeId]);
   }
 
-  Future<int> updateRecipe(Recipe recipe) async {
-    Database db = await getDatabase();
+  Future<int> updateRecipe(Recipe recipe, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     return await db.rawUpdate(
         "UPDATE Recipe SET name = ?, description = ?, image = ? WHERE Recipe.id = ?",
@@ -514,22 +515,22 @@ class RecipeRootsDAO {
         "DELETE FROM Family_Relation WHERE id = ?", [familyRelation.id]);
   }
 
-  Future<int> deleteRecipeIngredientsFromRecipeID(int recipeId) async {
-    Database db = await getDatabase();
+  Future<int> deleteRecipeIngredientsFromRecipeID(int recipeId, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     return await db
         .rawDelete("DELETE FROM Ingredient WHERE recipe_id = ?", [recipeId]);
   }
 
-  Future<int> deleteRecipeCookingStepsFromRecipeID(int recipeId) async {
-    Database db = await getDatabase();
+  Future<int> deleteRecipeCookingStepsFromRecipeID(int recipeId, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     return await db
         .rawDelete("DELETE FROM Cooking_Steps WHERE recipe_id = ?", [recipeId]);
   }
 
-  Future<int> deletePersonFromRecipe(int recipeId) async {
-    Database db = await getDatabase();
+  Future<int> deletePersonFromRecipe(int recipeId, [DatabaseExecutor? txn]) async {
+    final db = txn ?? await getDatabase();
 
     return await db.rawDelete(
         "DELETE FROM Recipe_To_Person WHERE recipe_id = ?", [recipeId]);
@@ -547,5 +548,26 @@ class RecipeRootsDAO {
 
     return await db.rawDelete(
         "DELETE FROM Child_To_Parent WHERE id = ?", [childToParent.id ?? -1]);
+  }
+
+  Future<void> performRecipeEdit(EntireRecipe entireRecipe, int id) async {
+    Database db = await getDatabase();
+    await db.transaction((txn) async {
+      await deleteRecipeCookingStepsFromRecipeID(id, txn);
+      await deleteRecipeIngredientsFromRecipeID(id, txn);
+      await deletePersonFromRecipe(id, txn);
+
+      await addCookingSteps(entireRecipe.cookingSteps, id, txn);
+
+      for (Ingredient ingredient in entireRecipe.ingredients) {
+        await addIngredients(ingredient, id, txn);
+      }
+
+      for (Person person in entireRecipe.authors) {
+        await addPersonToRecipe(id, person, txn);
+      }
+      
+      await updateRecipe(entireRecipe.recipe, txn);
+    });
   }
 }

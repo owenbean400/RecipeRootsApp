@@ -7,7 +7,6 @@ This repository contains the source code for the app recipe_roots, created by Ow
 - [What is Recipe Roots](#What-Is-Recipe-Roots)
 - [Installation](#Installation)
 - [Emulation](#Emulation)
-- [Conclusion](#Conclusion)
 
 ## What is Recipe Roots
 Recipe Roots is your family cookbook that fits in your pocket.  

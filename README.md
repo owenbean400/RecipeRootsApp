@@ -19,8 +19,7 @@ After running doctor in the VSCode Command Palette, install the Flutter SDK if p
 Clone the RecipeRootsApp Repository  
 Run this command  
 -  flutter pub get --no-example
-
-## Emulation
+  
 Follow the documentation for [android setup](https://flutter.dev/docs/get-started/install/windows#android-setup)  
 Follow both the 'Install Android Studio' and 'Set up the Android Emulator' steps  
 If having trouble finding the 'Device Manager' button, it is on the right tab on Android Studio  

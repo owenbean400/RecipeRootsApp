@@ -27,7 +27,7 @@ If having trouble finding the 'Device Manager' button, it is on the right tab on
 Follow this [link](https://developer.android.com/studio/command-line) to find out where your Android/Sdk folder is  
 Also make sure "Android SDK Command-line Tools (lastest)' is installed under Settings->Languages & Frameworks->Android SDK->SDK Tools  
 Execute the following commands  
--  flutter config --android-sdk "<path-to-your-android-sdk-path>"
+-  flutter config --android-sdk "android/sdk/path"
 -  flutter doctor --android-licenses
 
 Restart VSCode  

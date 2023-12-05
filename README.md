@@ -37,4 +37,57 @@ Follow these instructions to run and edit the app
 1. Navigate to RecipeRootsApp/lib/main.dart  
 2. Press start debugging in the top right start dropdown menu
 3. The app will launch in the emulator on Android Studio (First run may take a bit of time)  
-4. While editing the code, you can save the file to instantly update the app on the emulator  
+4. While editing the code, you can save the file to instantly update the app on the emulator
+
+## Project Structure
+
+```bash
+RecipeRootsApp/lib/
+├── dao/recipe_roots_dao.dart       # database and sql queries
+├── domain/                         # defines many classes
+        ...
+├── helper/                         # helper functions
+|   └── map_index.dart              # apply function to items
+|   └── the_person.dart             # class for user
+├── service/                        # AppLocalization & AppLocalizationDelegate
+|   └── family_service.dart         # manage and retrieve family tree information
+|   └── person_service.dart         # define and interact with persons
+|   └── recipe_service.dart         # handle recipe operations
+├── view/                           #
+|  ├── widget/                      # define header widgets
+|  |  └──                           #
+|  |  └──                           #
+|  ├── window/                      # 
+|  |  └──                           #
+|  |  └──                           #
+|  └── navigation_view.dart         #
+|  └── setup_user.dart              #
+
+## Features
+
+### People
+
+- Add/Edit Yourself and Relatives
+- Delete Relatives
+- Add/Edit/Delete Relatives Relationships to Yourself
+
+### Family Tree
+
+- Add Child-To-Parent Relations
+- Move Nodes
+- Search for Recipes from Node
+
+### Recipes
+
+- Add Recipes
+  - Recipe Name
+  - Description
+  - Author(s)
+  - Ingredients
+  - Cooking Steps
+- Search for Recipes by
+  - Title
+  - Description
+  - People
+  - Family Relation
+  - Ingredients

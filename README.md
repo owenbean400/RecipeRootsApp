@@ -43,25 +43,36 @@ Follow these instructions to run and edit the app
 
 ```bash
 RecipeRootsApp/lib/
-├── dao/recipe_roots_dao.dart       # database and sql queries
-├── domain/                         # defines many classes
+├── dao/recipe_roots_dao.dart                       # database and sql queries
+├── domain/                                        # defines many classes
         ...
-├── helper/                         # helper functions
-|   └── map_index.dart              # apply function to items
-|   └── the_person.dart             # class for user
-├── service/                        # AppLocalization & AppLocalizationDelegate
-|   └── family_service.dart         # manage and retrieve family tree information
-|   └── person_service.dart         # define and interact with persons
-|   └── recipe_service.dart         # handle recipe operations
-├── view/                           #
-|  ├── widget/                      # define header widgets
-|  |  └──                           #
-|  |  └──                           #
-|  ├── window/                      # 
-|  |  └──                           #
-|  |  └──                           #
-|  └── navigation_view.dart         #
-|  └── setup_user.dart              #
+├── helper/                                        # helper functions
+|   └── map_index.dart                             # apply function to items
+|   └── the_person.dart                            # class for user
+├── service/                                       # 
+|   └── family_service.dart                        # manage and retrieve family tree information
+|   └── person_service.dart                        # define and interact with persons
+|   └── recipe_service.dart                        # handle recipe operations
+├── view/                                          #
+|  ├── widget/                                     # define header widgets
+|  |  └── header_add.dart                          #
+|  |  └── header_backspace.dart                    #
+|  |  └── header_person_list.dart                  #
+|  |  └── header_plain.dart                        #
+|  ├── window/                                     # 
+|  |  ├── family_tree/                             #
+|  |  |  ├── widget/                               #
+|  |  |  |  ├── child_to_parent_tile.dart          #
+|  |  |  |  ├── header_child_to_parent_tile.dart   #
+|  |  |  ├── family_tree_add.dart                  #
+|  |  |  ├── family_tree_view.dart                 #
+|  |  |  ├── family_tree_view_list.dart            #
+|  |  ├── people/
+|  |  ├── recipe/                                  #
+|  |  ├── default.dart/                            #
+|  |  ├── user_add_view.dart/                      #
+|  └── navigation_view.dart                        #
+|  └── setup_user.dart                             #
 
 ## Features
 

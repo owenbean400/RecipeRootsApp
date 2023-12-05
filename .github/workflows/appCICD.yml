@@ -3,8 +3,12 @@ name: App builds
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - '!README.md'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - '!README.md'
 
 jobs:
   build_appbundle_deploy_internal_testing:

@@ -20,7 +20,13 @@ class SubmitRecipeFormButton extends StatelessWidget {
                     .showSnackBar(getErrorSnackbar(e.toString(), context))
               });
     } else {
-      RecipeService().editRecipe(recipe).then((value) => goToRecipeViews());
+      RecipeService()
+          .editRecipe(recipe)
+          .then((value) => goToRecipeViews())
+          .catchError((e) => {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(getErrorSnackbar(e.toString(), context))
+              });
     }
   }
 

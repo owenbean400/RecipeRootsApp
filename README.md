@@ -12,14 +12,14 @@ This repository contains the source code for the iOS and Android mobile app Reci
 Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots.
 
 ## Installation
-Follow these instructions to run and edit the app
+Follow these instructions to run and edit the app  
 
 ### Cloning & Installing Flutter
 1. Follow the [Flutter installation guide](https://docs.flutter.dev/get-started/install)  
 2. After running 'doctor' in the VSCode Command Palette, install the Flutter SDK if prompted  
 3. Clone the RecipeRootsApp Repository and navigate to it
 4. Run this command in your terminal
--  flutter pub get --no-example
+-  flutter pub get --no-example  
 
 ### Running the Emulator
 Follow the documentation for [android setup](https://flutter.dev/docs/get-started/install/windows#android-setup)  

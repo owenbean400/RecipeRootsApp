@@ -43,7 +43,7 @@ Follow these instructions to run and edit the app
 
 ```bash
 RecipeRootsApp/lib/
-├── dao/recipe_roots_dao.dart                       # database and sql queries
+├── dao/recipe_roots_dao.dart                      # database and sql queries
 ├── domain/                                        # defines many classes
         ...
 ├── helper/                                        # helper functions

@@ -7,6 +7,8 @@ This repository contains the source code for the iOS and Android mobile app Reci
 - [Introduction](#Introduction)
 - [Installation](#Installation)
 - [Editing the Code](#Editing-the-Code)
+- [Features](#Features)
+- [Project Structure](#Project-Structure)
 
 ## Introduction
 Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots.

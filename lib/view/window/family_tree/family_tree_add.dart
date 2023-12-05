@@ -88,7 +88,9 @@ class ChildToParentAddState extends State<ChildToParentAdd> {
                               Consumer<ChildToParentForm>(builder:
                                   ((context, childToParentForm, child) {
                                 if (childToParentForm.child != null &&
-                                    childToParentForm.parent != null) {
+                                    childToParentForm.parent != null &&
+                                    childToParentForm.child !=
+                                        childToParentForm.parent) {
                                   return ElevatedButton(
                                     onPressed: () {
                                       update(

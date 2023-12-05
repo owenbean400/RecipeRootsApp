@@ -623,22 +623,26 @@ class RecipeRootsDAO {
 
   Future<void> performRecipeEdit(EntireRecipe entireRecipe, int id) async {
     Database db = await getDatabase();
-    await db.transaction((txn) async {
-      await deleteRecipeCookingStepsFromRecipeID(id, txn);
-      await deleteRecipeIngredientsFromRecipeID(id, txn);
-      await deletePersonFromRecipe(id, txn);
+    try {
+      await db.transaction((txn) async {
+        await deleteRecipeCookingStepsFromRecipeID(id, txn);
+        await deleteRecipeIngredientsFromRecipeID(id, txn);
+        await deletePersonFromRecipe(id, txn);
 
-      await addCookingSteps(entireRecipe.cookingSteps, id, txn);
+        await addCookingSteps(entireRecipe.cookingSteps, id, txn);
 
-      for (Ingredient ingredient in entireRecipe.ingredients) {
-        await addIngredients(ingredient, id, txn);
-      }
+        for (Ingredient ingredient in entireRecipe.ingredients) {
+          await addIngredients(ingredient, id, txn);
+        }
 
-      for (Person person in entireRecipe.authors) {
-        await addPersonToRecipe(id, person, txn);
-      }
-      
-      await updateRecipe(entireRecipe.recipe, txn);
-    });
+        for (Person person in entireRecipe.authors) {
+          await addPersonToRecipe(id, person, txn);
+        }
+        
+        await updateRecipe(entireRecipe.recipe, txn);
+      });
+    } catch (e) {
+      //
+    }
   }
 }

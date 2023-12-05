@@ -354,13 +354,9 @@ class RecipeRootsDAO {
 
   Future<int> addPerson(Person add) async {
     Database db = await getDatabase();
-    try {
-      return await db.rawInsert(
-          "INSERT INTO Person(first_name, middle_name, last_name) VALUES(?, ?, ?)",
-          [add.firstName, add.middleName, add.lastName]);
-    } catch (e) {
-      return -1;
-    }
+    return await db.rawInsert(
+        "INSERT INTO Person(first_name, middle_name, last_name) VALUES(?, ?, ?)",
+        [add.firstName, add.middleName, add.lastName]);
   }
 
   Future<int> addFamilyRelation(
@@ -378,14 +374,10 @@ class RecipeRootsDAO {
 
   Future<int> addRecipe(Recipe recipe) async {
     Database db = await getDatabase();
-    try {
-      return await db.rawInsert(
-        "INSERT INTO Recipe (name, description) VALUES (?, ?)",
-        [recipe.title, recipe.desc]
-      );
-    } catch (e) {
-      return -1;
-    }
+    return await db.rawInsert(
+      "INSERT INTO Recipe (name, description) VALUES (?, ?)",
+      [recipe.title, recipe.desc]
+    );
   }
 
   Future<void> addCookingSteps(
@@ -394,7 +386,6 @@ class RecipeRootsDAO {
     int priorId = -1;
     
     for (CookingStep cookingStep in cookingSteps) {
-      try {
         priorId = await db.rawInsert(
             "INSERT INTO Cooking_Steps (recipe_id, step_order, instruction) VALUES (?, ?, ?)",
             [
@@ -402,28 +393,21 @@ class RecipeRootsDAO {
               (priorId == -1) ? "NULL" : priorId,
               cookingStep.instruction
             ]);
-      } catch (e) {
-        //
-      }
     }
   }
 
   Future<void> addIngredients(Ingredient ingredient, int recipeId, [DatabaseExecutor? txn]) async {
     final db = txn ?? await getDatabase();
 
-    try {
-      await db.rawInsert(
-          "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
-          [
-            recipeId,
-            ingredient.amount,
-            ingredient.unit,
-            ingredient.ingredient,
-            ingredient.prepMethod ?? ""
-          ]);
-    } catch (e) {
-      //
-    }
+    await db.rawInsert(
+        "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
+        [
+          recipeId,
+          ingredient.amount,
+          ingredient.unit,
+          ingredient.ingredient,
+          ingredient.prepMethod ?? ""
+        ]);
   }
 
   Future<void> addPersonToRecipe(int recipeId, Person person, [DatabaseExecutor? txn]) async {
@@ -623,26 +607,22 @@ class RecipeRootsDAO {
 
   Future<void> performRecipeEdit(EntireRecipe entireRecipe, int id) async {
     Database db = await getDatabase();
-    try {
-      await db.transaction((txn) async {
-        await deleteRecipeCookingStepsFromRecipeID(id, txn);
-        await deleteRecipeIngredientsFromRecipeID(id, txn);
-        await deletePersonFromRecipe(id, txn);
+    await db.transaction((txn) async {
+      await deleteRecipeCookingStepsFromRecipeID(id, txn);
+      await deleteRecipeIngredientsFromRecipeID(id, txn);
+      await deletePersonFromRecipe(id, txn);
 
-        await addCookingSteps(entireRecipe.cookingSteps, id, txn);
+      await addCookingSteps(entireRecipe.cookingSteps, id, txn);
 
-        for (Ingredient ingredient in entireRecipe.ingredients) {
-          await addIngredients(ingredient, id, txn);
-        }
+      for (Ingredient ingredient in entireRecipe.ingredients) {
+        await addIngredients(ingredient, id, txn);
+      }
 
-        for (Person person in entireRecipe.authors) {
-          await addPersonToRecipe(id, person, txn);
-        }
-        
-        await updateRecipe(entireRecipe.recipe, txn);
-      });
-    } catch (e) {
-      //
-    }
+      for (Person person in entireRecipe.authors) {
+        await addPersonToRecipe(id, person, txn);
+      }
+      
+      await updateRecipe(entireRecipe.recipe, txn);
+    });
   }
 }

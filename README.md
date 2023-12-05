@@ -76,6 +76,7 @@ RecipeRootsApp/lib/
 ```
 
 ## Features
+Sections and their Capabilities
 
 ### People
 

@@ -4,20 +4,24 @@ This repository contains the source code for the iOS and Android mobile app Reci
 
 ## Table of Contents
 
-- [What is Recipe Roots](#What-Is-Recipe-Roots)
+- [Introduction](#Introduction)
 - [Installation](#Installation)
 - [Editing the Code](#Editing-the-Code)
 
-## What is Recipe Roots
+## Introduction
 Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots.
 
 ## Installation
-Follow the documentation for [Flutter installation](https://docs.flutter.dev/get-started/install)  
-After running doctor in the VSCode Command Palette, install the Flutter SDK if prompted  
-Clone the RecipeRootsApp Repository  
-Run this command  
+Follow these instructions to run and edit the app
+
+### Cloning & Installing Flutter
+1. Follow the [Flutter installation guide](https://docs.flutter.dev/get-started/install)  
+2. After running 'doctor' in the VSCode Command Palette, install the Flutter SDK if prompted  
+3. Clone the RecipeRootsApp Repository and navigate to it
+4. Run this command in your terminal
 -  flutter pub get --no-example
-  
+
+### Running the Emulator
 Follow the documentation for [android setup](https://flutter.dev/docs/get-started/install/windows#android-setup)  
 Follow both the 'Install Android Studio' and 'Set up the Android Emulator' steps  
 If having trouble finding the 'Device Manager' button, it is on the right tab on Android Studio  
@@ -27,9 +31,9 @@ Execute the following commands
 -  flutter config --android-sdk "path/to/android/sdk"
 -  flutter doctor --android-licenses
 
-Restart VSCode  
+Finally, restart VSCode  
 
-## Editing the Code
+### Editing Workflow
 Navigate to RecipeRootsApp/lib/main.dart  
 Press start debugging in the top right start dropdown menu
 The app will launch in the emulator on Android Studio (First run may take a bit of time)  

@@ -49,16 +49,13 @@ RecipeRootsApp/lib/
 ├── helper/                                        # helper functions
 |   └── map_index.dart                             # apply function to items
 |   └── the_person.dart                            # class for user
-├── service/                                       # 
+├── service/                                       # abstraction layer connecting UI to Database
 |   └── family_service.dart                        # manage and retrieve family tree information
 |   └── person_service.dart                        # define and interact with persons
 |   └── recipe_service.dart                        # handle recipe operations
-├── view/                                          #
-|  ├── widget/                                     # define header widgets
-|  |  └── header_add.dart                          #
-|  |  └── header_backspace.dart                    #
-|  |  └── header_person_list.dart                  #
-|  |  └── header_plain.dart                        #
+├── view/                                          # UI code
+|  ├── widget/                                     # define global widgets
+        ...
 |  ├── window/                                     # 
 |  |  ├── family_tree/                             #
 |  |  |  ├── widget/                               #

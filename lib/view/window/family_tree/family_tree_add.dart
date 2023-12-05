@@ -6,6 +6,7 @@ import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/service/family_service.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
+import 'package:recipe_roots/view/widget/snackbar_error.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/person_drop_menu.dart';
 
 class ChildToParentAdd extends StatefulWidget {
@@ -25,13 +26,21 @@ class ChildToParentAddState extends State<ChildToParentAdd> {
   void update(ChildToParent updatedRecord) {
     FamilyService()
         .updateChildToParent(updatedRecord)
-        .then((value) => {widget.goToViewFamilyTree()});
+        .then((value) => {widget.goToViewFamilyTree()})
+        .catchError((e) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(getErrorSnackbar(e.toString(), context))
+            });
   }
 
   void delete(ChildToParent deletedRecord) {
     FamilyService()
         .deleteChildToParent(deletedRecord)
-        .then((value) => {widget.goToViewFamilyTree()});
+        .then((value) => {widget.goToViewFamilyTree()})
+        .catchError((e) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(getErrorSnackbar(e.toString(), context))
+            });
   }
 
   @override

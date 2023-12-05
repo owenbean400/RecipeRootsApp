@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
 import 'package:recipe_roots/service/recipe_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
+import 'package:recipe_roots/view/widget/snackbar_error.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/cooking_steps_view.dart';
 import 'package:recipe_roots/view/window/recipe/widgets/ingredients_view.dart';
 
@@ -73,7 +74,11 @@ class RecipeView extends StatelessWidget {
                       onPressed: () {
                         RecipeService()
                             .deleteRecipe(recipe)
-                            .then((value) => goToRecipeViews());
+                            .then((value) => goToRecipeViews())
+                            .catchError((e) => {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      getErrorSnackbar(e.toString(), context))
+                                });
                       },
                       child: Text("Delete",
                           style: Theme.of(context).textTheme.bodyMedium)),

@@ -14,16 +14,16 @@ class RecipeRootsDAO {
   final String databaseName = "recipeRoots.db";
 
   Future<Database> getDatabase() async {
-    Database database = await openDatabase(databaseName, version: 5,
+    Database database = await openDatabase(databaseName, version: 6,
       onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE Recipe (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, description TEXT, image TEXT)");
+            "CREATE TABLE Recipe (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL CHECK(name <> ''), description TEXT, image TEXT)");
         await db.execute(
-            "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
+            "CREATE TABLE Cooking_Steps (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT CHECK(instruction <> ''), FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
         await db.execute(
-            "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT, prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
+            "CREATE TABLE Ingredient (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT CHECK(ingredient <> ''), prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
         await db.execute(
-            "CREATE TABLE Person (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT)");
+            "CREATE TABLE Person (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT, CHECK (first_name <> '' OR middle_name <> '' OR last_name <> ''))");
         await db.execute(
             "CREATE TABLE Family_Relation (id INTEGER PRIMARY KEY AUTOINCREMENT, from_person_id INTEGER, to_person_id INTEGER, relationship TEXT, FOREIGN KEY (from_person_id) REFERENCES Person (id) ON DELETE CASCADE, FOREIGN KEY (to_person_id) REFERENCES Person (id) ON DELETE CASCADE)");
         await db.execute(
@@ -43,6 +43,43 @@ class RecipeRootsDAO {
             await db.execute(
                 "CREATE TABLE Position (id INTEGER PRIMARY KEY AUTOINCREMENT, person_id INTEGER, x REAL, y REAL, FOREIGN KEY (person_id) REFERENCES Person(id) ON DELETE CASCADE)");
           }        
+        }
+        if (oldVersion < 6) {
+          await db.execute(
+              "CREATE TABLE Recipe_new (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL CHECK(name <> ''), description TEXT, image TEXT)");
+          await db.execute(
+              "INSERT INTO Recipe_new (id, name, description, image) SELECT id, name, description, image FROM Recipe WHERE name <> ''");
+          await db.execute(
+              "DROP TABLE Recipe");
+          await db.execute(
+              "ALTER TABLE Recipe_new RENAME TO Recipe");
+
+          await db.execute(
+              "CREATE TABLE Person_new (id INTEGER PRIMARY KEY AUTOINCREMENT, first_name TEXT, middle_name TEXT, last_name TEXT, CHECK (first_name <> '' OR middle_name <> '' OR last_name <> ''))");
+          await db.execute(
+              "INSERT INTO Person_new (id, first_name, middle_name, last_name) SELECT id, first_name, middle_name, last_name FROM Person WHERE first_name <> '' OR middle_name <> '' OR last_name <> ''");
+          await db.execute(
+              "DROP TABLE Person");
+          await db.execute(
+              "ALTER TABLE Person_new RENAME TO Person");
+
+          await db.execute(
+              "CREATE TABLE Cooking_Steps_new (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, step_order INT, instruction TEXT CHECK(instruction <> ''), FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE, FOREIGN KEY (step_order) REFERENCES Cooking_Steps(id))");
+          await db.execute(
+              "INSERT INTO Cooking_Steps_new (id, recipe_id, step_order, instruction) SELECT id, recipe_id, step_order, instruction FROM Cooking_Steps WHERE instruction <> ''");
+          await db.execute(
+              "DROP TABLE Cooking_Steps");
+          await db.execute(
+              "ALTER TABLE Cooking_Steps_new RENAME TO Cooking_Steps");
+
+          await db.execute(
+              "CREATE TABLE Ingredient_new (id INTEGER PRIMARY KEY AUTOINCREMENT, recipe_id INT NOT NULL, amount TEXT, unit TEXT, ingredient TEXT CHECK(ingredient <> ''), prep_method TEXT, FOREIGN KEY (recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE)");
+          await db.execute(
+              "INSERT INTO Ingredient_new (id, recipe_id, amount, unit, ingredient, prep_method) SELECT id, recipe_id, amount, unit, ingredient, prep_method FROM Ingredient WHERE ingredient <> ''");
+          await db.execute(
+              "DROP TABLE Ingredient");
+          await db.execute(
+              "ALTER TABLE Ingredient_new RENAME TO Ingredient");         
         }
       },
     );
@@ -317,12 +354,13 @@ class RecipeRootsDAO {
 
   Future<int> addPerson(Person add) async {
     Database db = await getDatabase();
-
-    int id = await db.rawInsert(
-        "INSERT INTO Person(first_name, middle_name, last_name) VALUES(?, ?, ?)",
-        [add.firstName, add.middleName, add.lastName]);
-
-    return id;
+    try {
+      return await db.rawInsert(
+          "INSERT INTO Person(first_name, middle_name, last_name) VALUES(?, ?, ?)",
+          [add.firstName, add.middleName, add.lastName]);
+    } catch (e) {
+      return -1;
+    }
   }
 
   Future<int> addFamilyRelation(
@@ -340,40 +378,52 @@ class RecipeRootsDAO {
 
   Future<int> addRecipe(Recipe recipe) async {
     Database db = await getDatabase();
-
-    return await db.rawInsert(
+    try {
+      return await db.rawInsert(
         "INSERT INTO Recipe (name, description) VALUES (?, ?)",
-        [recipe.title, recipe.desc]);
+        [recipe.title, recipe.desc]
+      );
+    } catch (e) {
+      return -1;
+    }
   }
 
   Future<void> addCookingSteps(
       List<CookingStep> cookingSteps, int recipeId, [DatabaseExecutor? txn]) async {
     final db = txn ?? await getDatabase();
     int priorId = -1;
-
+    
     for (CookingStep cookingStep in cookingSteps) {
-      priorId = await db.rawInsert(
-          "INSERT INTO Cooking_Steps (recipe_id, step_order, instruction) VALUES (?, ?, ?)",
-          [
-            recipeId,
-            (priorId == -1) ? "NULL" : priorId,
-            cookingStep.instruction
-          ]);
+      try {
+        priorId = await db.rawInsert(
+            "INSERT INTO Cooking_Steps (recipe_id, step_order, instruction) VALUES (?, ?, ?)",
+            [
+              recipeId,
+              (priorId == -1) ? "NULL" : priorId,
+              cookingStep.instruction
+            ]);
+      } catch (e) {
+        //
+      }
     }
   }
 
   Future<void> addIngredients(Ingredient ingredient, int recipeId, [DatabaseExecutor? txn]) async {
     final db = txn ?? await getDatabase();
 
-    await db.rawInsert(
-        "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
-        [
-          recipeId,
-          ingredient.amount,
-          ingredient.unit,
-          ingredient.ingredient,
-          ingredient.prepMethod ?? ""
-        ]);
+    try {
+      await db.rawInsert(
+          "INSERT INTO Ingredient (recipe_id, amount, unit, ingredient, prep_method) VALUES (?, ?, ?, ?, ?)",
+          [
+            recipeId,
+            ingredient.amount,
+            ingredient.unit,
+            ingredient.ingredient,
+            ingredient.prepMethod ?? ""
+          ]);
+    } catch (e) {
+      //
+    }
   }
 
   Future<void> addPersonToRecipe(int recipeId, Person person, [DatabaseExecutor? txn]) async {
@@ -387,9 +437,16 @@ class RecipeRootsDAO {
   Future<void> addChildToParent(ChildToParent childToParent) async {
     Database db = await getDatabase();
 
-    await db.rawInsert(
-        "INSERT INTO Child_To_Parent (child_id, parent_id) VALUEs (?, ?)",
-        [childToParent.child.id, childToParent.parent.id]);
+    List<Map> result = await db.query(
+        'Child_To_Parent',
+        where: 'child_id = ? AND parent_id = ?',
+        whereArgs: [childToParent.parent.id, childToParent.child.id]
+    );
+    if (result.isEmpty) {
+      await db.rawInsert(
+          "INSERT INTO Child_To_Parent (child_id, parent_id) VALUEs (?, ?)",
+          [childToParent.child.id, childToParent.parent.id]);
+    }
   }
 
   Future<int> updatePerson(Person person) async {
@@ -497,9 +554,23 @@ class RecipeRootsDAO {
   Future<int> updateChildToPerson(ChildToParent childToParent) async {
     Database db = await getDatabase();
 
-    return await db.rawUpdate(
-        "UPDATE Child_To_Parent SET child_id = ?, parent_id = ? WHERE id = ?",
-        [childToParent.child.id, childToParent.parent.id, childToParent.id]);
+    List<Map> result1 = await db.query(
+        'Child_To_Parent',
+        where: 'child_id = ? AND parent_id = ?',
+        whereArgs: [childToParent.parent.id, childToParent.child.id]
+    );
+    List<Map> result2 = await db.query(
+        'Child_To_Parent',
+        where: 'child_id = ? AND parent_id = ?',
+        whereArgs: [childToParent.child.id, childToParent.parent.id]
+    );
+    if (result1.isEmpty && result2.isEmpty) {
+      return await db.rawUpdate(
+          "UPDATE Child_To_Parent SET child_id = ?, parent_id = ? WHERE id = ?",
+          [childToParent.child.id, childToParent.parent.id, childToParent.id]);
+    } else {
+      return -1;
+    }
   }
 
   Future<int> deletePerson(Person person) async {

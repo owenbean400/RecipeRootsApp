@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class HeaderAddWithSecondAction extends StatelessWidget {
@@ -20,9 +18,8 @@ class HeaderAddWithSecondAction extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return Container(
-          padding: (Platform.isIOS)
-              ? const EdgeInsets.fromLTRB(16, 56, 0, 16)
-              : const EdgeInsets.fromLTRB(16, 32, 0, 16),
+          padding: EdgeInsets.fromLTRB(
+              16, MediaQuery.of(context).viewPadding.top + 16, 0, 16),
           width: constraints.maxWidth,
           color: Theme.of(context).primaryColor,
           child: Row(

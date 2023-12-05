@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_roots/domain/entire_recipe.dart';
@@ -97,9 +95,11 @@ class RecipeViewsState extends State<RecipeViews> {
 
                     return SingleChildScrollView(
                         child: Padding(
-                            padding: (Platform.isIOS)
-                                ? const EdgeInsets.fromLTRB(0, 140, 0, 0)
-                                : const EdgeInsets.fromLTRB(0, 100, 0, 0),
+                            padding: EdgeInsets.fromLTRB(
+                                0,
+                                MediaQuery.of(context).viewPadding.top + 108,
+                                0,
+                                16),
                             child: Column(
                               children: recipeTitles,
                             )));

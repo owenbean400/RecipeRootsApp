@@ -73,6 +73,7 @@ RecipeRootsApp/lib/
 |  |  ├── user_add_view.dart/                      #
 |  └── navigation_view.dart                        #
 |  └── setup_user.dart                             #
+```
 
 ## Features
 

@@ -13,7 +13,7 @@ Authored by Owen Bean, SJ Franklin, and Shea Durgin.
 - [Features](#Features)
 
 ## Introduction
-Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots. Here is a peek into what it looks like!
+Recipe Roots is a family cookbook that fits in your pocket. It holds records of your relatives recipes while properly attributing them as authors. You are able to construct your family tree to properly showcase your Recipe Roots. Here is a peek into what it looks like!  
 <img src="/assets/icons/family_tree.jpg" alt="Family Tree" width="180"/>
 <img src="/assets/icons/recipes.png" alt="Recipes" width="213"/>
 <img src="/assets/icons/recipes_view.png" alt="View of a Recipe" width="215"/>

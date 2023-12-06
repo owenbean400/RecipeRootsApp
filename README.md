@@ -92,13 +92,13 @@ Sections and their Capabilities
 
 ### Family Tree
 
-- Add Child-To-Parent Relations
+- Add/Edit/Delete Child-To-Parent Relations
 - Move Nodes
 - Search for Recipes from Node
 
 ### Recipes
 
-- Add Recipes
+- Add/Edit/Delete Recipes
   - Recipe Name
   - Description
   - Author(s)

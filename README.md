@@ -36,7 +36,7 @@ Follow these instructions to run and edit the app
 `flutter config --android-sdk "path/to/android/sdk"`  
 `flutter doctor --android-licenses`
 
-8. Restart VSCode  
+7. Restart VSCode  
 
 ### Editing Workflow
 1. `cd` to `RecipeRootsApp/lib/main.dart`

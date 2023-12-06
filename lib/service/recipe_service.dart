@@ -75,23 +75,13 @@ class RecipeService {
   }
 
   Future<void> addRecipe(EntireRecipe entireRecipe) async {
-    int recipeId = await RecipeRootsDAO().addRecipe(entireRecipe.recipe);
-
-    await RecipeRootsDAO().addCookingSteps(entireRecipe.cookingSteps, recipeId);
-
-    for (Ingredient ingredient in entireRecipe.ingredients) {
-      await RecipeRootsDAO().addIngredients(ingredient, recipeId);
-    }
-
-    for (Person person in entireRecipe.authors) {
-      await RecipeRootsDAO().addPersonToRecipe(recipeId, person);
-    }
+    await RecipeRootsDAO().performRecipeAdd(entireRecipe);
   }
 
   Future<void> editRecipe(EntireRecipe entireRecipe) async {
     if (entireRecipe.recipe.id != null) {
       int id = entireRecipe.recipe.id!;
-      
+
       await RecipeRootsDAO().performRecipeEdit(entireRecipe, id);
     } else {
       await addRecipe(entireRecipe);

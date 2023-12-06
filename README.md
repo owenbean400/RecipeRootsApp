@@ -3,7 +3,7 @@
 This repository contains the source code for the iOS and Android mobile app Recipe Roots.  
 Authored by Owen Bean, SJ Franklin, and Shea Durgin.  
 <img src="/assets/icons/reciperoots.png" alt="Recipe Roots Logo" width="100"/>  
-<img src="/assets/icons/family_tree.jpg" alt="Family Tree" width="175"/>
+<img src="/assets/icons/family_tree.jpg" alt="Family Tree" width="180"/>
 <img src="/assets/icons/recipes.png" alt="Recipes" width="210"/>
 <img src="/assets/icons/recipes_view.png" alt="View of a Recipe" width="213"/>
 <img src="/assets/icons/edit_recipes.png" alt="Editing a Recipe" width="210"/>

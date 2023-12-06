@@ -372,12 +372,11 @@ class RecipeRootsDAO {
         ]);
   }
 
-  Future<int> addRecipe(Recipe recipe) async {
-    Database db = await getDatabase();
+  Future<int> addRecipe(Recipe recipe, [DatabaseExecutor? txn]) async {
+    DatabaseExecutor db = txn ?? await getDatabase();
     return await db.rawInsert(
-      "INSERT INTO Recipe (name, description) VALUES (?, ?)",
-      [recipe.title, recipe.desc]
-    );
+        "INSERT INTO Recipe (name, description) VALUES (?, ?)",
+        [recipe.title, recipe.desc]);
   }
 
   Future<void> addCookingSteps(
@@ -603,6 +602,23 @@ class RecipeRootsDAO {
 
     return await db.rawDelete(
         "DELETE FROM Child_To_Parent WHERE id = ?", [childToParent.id ?? -1]);
+  }
+
+  Future<void> performRecipeAdd(EntireRecipe entireRecipe) async {
+    Database db = await getDatabase();
+    await db.transaction((txn) async {
+      int recipeId = await RecipeRootsDAO().addRecipe(entireRecipe.recipe, txn);
+
+      await addCookingSteps(entireRecipe.cookingSteps, recipeId, txn);
+
+      for (Ingredient ingredient in entireRecipe.ingredients) {
+        await addIngredients(ingredient, recipeId, txn);
+      }
+
+      for (Person person in entireRecipe.authors) {
+        await addPersonToRecipe(recipeId, person, txn);
+      }
+    });
   }
 
   Future<void> performRecipeEdit(EntireRecipe entireRecipe, int id) async {

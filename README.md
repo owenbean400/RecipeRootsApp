@@ -31,11 +31,12 @@ Follow these instructions to run and edit the app
 3. If having trouble finding the 'Device Manager' button, it is on the right tab on Android Studio  
 4. Follow [this documentation](https://developer.android.com/studio/command-line) to locate you Android/Sdk folder
 5. Make sure "Android SDK Command-line Tools (lastest)' is installed under Settings->Languages & Frameworks->Android SDK->SDK Tools  
-6. Execute the following commands  
+6. Execute the following commands
+
 `flutter config --android-sdk "path/to/android/sdk"`  
 `flutter doctor --android-licenses`
 
-7. Restart VSCode  
+8. Restart VSCode  
 
 ### Editing Workflow
 1. `cd` to `RecipeRootsApp/lib/main.dart`

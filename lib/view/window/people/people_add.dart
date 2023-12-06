@@ -4,6 +4,7 @@ import 'package:recipe_roots/domain/person.dart';
 import 'package:recipe_roots/helper/the_person.dart';
 import 'package:recipe_roots/service/person_service.dart';
 import 'package:recipe_roots/view/widget/header_backspace.dart';
+import 'package:recipe_roots/view/widget/snackbar_error.dart';
 import 'package:recipe_roots/view/window/people/widgets/people_field.dart';
 import 'package:recipe_roots/view/window/people/widgets/people_text_field.dart';
 
@@ -42,7 +43,11 @@ class PeopleAddState extends State<PeopleAdd> {
 
     PersonService()
         .addFamilyRelation(ThePersonSingleton().user!, familyRelation)
-        .then((value) => {widget.setPeopleNavViewFunction()});
+        .then((value) => {widget.setPeopleNavViewFunction()})
+        .catchError((e) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(getErrorSnackbar(e.toString(), context))
+            });
   }
 
   updatePerson() {
@@ -57,7 +62,11 @@ class PeopleAddState extends State<PeopleAdd> {
 
     PersonService()
         .updateFamilyRelation(familyRelation)
-        .then((value) => {widget.setPeopleNavViewFunction()});
+        .then((value) => {widget.setPeopleNavViewFunction()})
+        .catchError((e) => {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(getErrorSnackbar(e.toString(), context))
+            });
   }
 
   deletePerson() {

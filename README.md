@@ -1,7 +1,7 @@
 # Recipe Roots
 
 This repository contains the source code for the iOS and Android mobile app Recipe Roots, created by Owen Bean, SJ Franklin, and Shea Durgin.
-![Recipe Roots Logo](/assets/icons/reciperoots.png)
+<img src="/assets/icons/reciperoots.png" alt="Recipe Roots Logo" width="100"/>
 
 ## Table of Contents
 

@@ -32,7 +32,7 @@ Follow these instructions to run and edit the app
 4. Follow [this documentation](https://developer.android.com/studio/command-line) to locate you Android/Sdk folder
 5. Make sure "Android SDK Command-line Tools (lastest)' is installed under Settings->Languages & Frameworks->Android SDK->SDK Tools  
 6. Execute the following commands  
-`flutter config --android-sdk "path/to/android/sdk"`
+`flutter config --android-sdk "path/to/android/sdk"`  
 `flutter doctor --android-licenses`
 
 7. Restart VSCode  

@@ -32,13 +32,13 @@ Follow these instructions to run and edit the app
 4. Follow [this documentation](https://developer.android.com/studio/command-line) to locate you Android/Sdk folder
 5. Make sure "Android SDK Command-line Tools (lastest)' is installed under Settings->Languages & Frameworks->Android SDK->SDK Tools  
 6. Execute the following commands  
--  flutter config --android-sdk "path/to/android/sdk"
--  flutter doctor --android-licenses
+`flutter config --android-sdk "path/to/android/sdk"`
+`flutter doctor --android-licenses`
 
 7. Restart VSCode  
 
 ### Editing Workflow
-1. Navigate to RecipeRootsApp/lib/main.dart  
+1. `cd` to `RecipeRootsApp/lib/main.dart`
 2. Press start debugging in the top right start dropdown menu
 3. The app will launch in the emulator on Android Studio (First run may take a bit of time)  
 4. While editing the code, you can save the file to instantly update the app on the emulator

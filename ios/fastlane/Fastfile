@@ -43,7 +43,7 @@ platform :ios do
 
     flutter_versioncode_bump({
       pubspec_location: "../pubspec.yaml",
-      version_code_increment: buildNumber + 1
+      version_code_increment: buildNumber
     })
   end
 

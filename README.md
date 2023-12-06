@@ -58,20 +58,27 @@ RecipeRootsApp/lib/
 ├── view/                                          # UI code
 |  ├── widget/                                     # define global widgets
         ...
-|  ├── window/                                     # 
-|  |  ├── family_tree/                             #
-|  |  |  ├── widget/                               #
-|  |  |  |  ├── child_to_parent_tile.dart          #
-|  |  |  |  ├── header_child_to_parent_tile.dart   #
-|  |  |  ├── family_tree_add.dart                  #
-|  |  |  ├── family_tree_view.dart                 #
-|  |  |  ├── family_tree_view_list.dart            #
-|  |  ├── people/
-|  |  ├── recipe/                                  #
-|  |  ├── default.dart/                            #
-|  |  ├── user_add_view.dart/                      #
-|  └── navigation_view.dart                        #
-|  └── setup_user.dart                             #
+|  ├── window/                                     # three tab UI code
+|  |  ├── family_tree/                             # family tree tab
+|  |  |  ├── widget/                               # define family tree page widgets
+        ...
+|  |  |  ├── family_tree_add.dart                  # add child to parent relationships
+|  |  |  ├── family_tree_view.dart                 # view family tree graph
+|  |  |  ├── family_tree_view_list.dart            # list child to parent relationships
+|  |  ├── people/                                  # people tab
+|  |  |  ├── widget/                               # define people page widgets
+        ...
+|  |  |  ├── people_add.dart                       # add new people
+|  |  |  ├── people_view.dart                      # view all people
+|  |  ├── recipe/                                  # recipe tab
+|  |  |  ├── widget/                               # define recipe page widgets
+        ...
+|  |  |  ├── recipe_edit.dart                      # edit recipes
+|  |  |  ├── recipe_view.dart                      # view recipe
+|  |  |  ├── recipes_view.dart                     # view list of recipes
+        ...
+|  └── navigation_view.dart                        # navigation bar
+|  └── setup_user.dart                             # initial user setup
 ```
 
 ## Features
